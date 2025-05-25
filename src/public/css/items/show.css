@@ -1,0 +1,93 @@
+.item-detail-container {
+    display: flex;
+    gap: 40px;
+    margin: 40px 0;
+}
+.item-detail-left {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+.item-detail-image {
+    width: 320px;
+    height: 320px;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.item-detail-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+.item-detail-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.item-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.item-brand {
+    color: #888;
+    margin-bottom: 16px;
+}
+.item-price {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+.tax {
+    font-size: 14px;
+    color: #888;
+}
+.buy-btn {
+    background: #ff4b4b;
+    color: #fff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+.item-section {
+    margin-bottom: 24px;
+}
+.item-section-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.category-tag {
+    background: #eee;
+    border-radius: 12px;
+    padding: 2px 12px;
+    margin-right: 8px;
+    font-size: 13px;
+}
+.comment {
+    margin-bottom: 8px;
+}
+.comment-user {
+    font-weight: bold;
+    margin-right: 8px;
+}
+.comment-box {
+    width: 100%;
+    min-height: 60px;
+    margin-bottom: 8px;
+}
+.comment-btn {
+    background: #ff4b4b;
+    color: #fff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+} 
