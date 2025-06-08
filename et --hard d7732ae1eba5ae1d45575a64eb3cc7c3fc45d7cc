@@ -1,0 +1,79 @@
+[33mcommit f91759f5dfd5c2a5870011bfd84d7af901d35c15[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: akito <xx.akito0707.xx@gmail.com>
+Date:   Mon May 26 22:03:51 2025 +0900
+
+    カテゴリ・状態のDB化、多対多リレーション、Seeder・モデル・コントローラー・Bladeの本実装
+
+[33mcommit d7732ae1eba5ae1d45575a64eb3cc7c3fc45d7cc[m
+Author: akito <xx.akito0707.xx@gmail.com>
+Date:   Sun May 25 20:54:56 2025 +0900
+
+    今日の作業内容をコミット（コントローラー・リクエスト・モデル・Seeder等の修正・追加・削除）
+
+[33mcommit fd0ece995e929bd576c72aabd236f507fc6bd11a[m
+Author: akito <xx.akito0707.xx@gmail.com>
+Date:   Fri May 23 22:20:02 2025 +0900
+
+    商品一覧画面の実装(仮)
+
+[33mcommit 8b54c6cfd313d6e3ea8ed0239b41ac5fcd4f8713[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: 岩崎敬信 <keishin0405.182@gmail.com>
+Date:   Fri Apr 15 12:12:09 2022 +0900
+
+    fix: Initialize laravel version 8.83.8
+
+[33mcommit f87057dba4d3b0899546078aeca33316242be053[m
+Merge: 34626df 61a952c
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sat Mar 12 17:23:36 2022 +0900
+
+    Merge branch 'master' of https://github.com/coachtech-material/laravel-docker-template
+
+[33mcommit 34626df99217b6ab4c7c5d1a12fb34664972b560[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sat Mar 12 17:21:16 2022 +0900
+
+    add: laravel-api-ec
+
+[33mcommit 61a952cd7145be511760dd29dac75e1ff6c4365c[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Fri Mar 11 16:35:15 2022 +0900
+
+    fix: settings
+
+[33mcommit 1c7fac8ec9caadcf56d6b9cebf0b98069fd4fcd7[m
+Merge: e86175e fe7f3d7
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Fri Mar 11 16:34:37 2022 +0900
+
+    merge conflict
+
+[33mcommit e86175e0eed3827ed5be219710b0d909d52ca606[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Fri Mar 11 16:31:01 2022 +0900
+
+    add: laravel api reservation
+
+[33mcommit fe7f3d706bcc8ea2c91a437dcd571d401b4d1d29[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Thu Mar 10 21:59:31 2022 +0900
+
+    fix: laravel api attendance
+
+[33mcommit 2068a0cbae22d4b22943062a6d12e78f3efc2e89[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sat Mar 5 14:15:31 2022 +0900
+
+    fix
+
+[33mcommit 867f56edb27130d185a03d99cb0ae29e774c4989[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sun Jan 30 14:52:07 2022 +0900
+
+    fix
+
+[33mcommit 281e0c80578425cf28310f320fc5c31312064cb6[m
+Author: soccerin30 <footballer.rin@gmail.com>
+Date:   Sun Jan 30 14:36:58 2022 +0900
+
+    first commit

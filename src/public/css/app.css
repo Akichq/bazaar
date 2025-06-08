@@ -1,16 +1,25 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    overflow-x: hidden;
+}
 .header {
     display: flex;
     align-items: center;
     background: #000;
     color: #fff;
     padding: 8px 24px;
+    width: 100%;
+    box-sizing: border-box;
 }
 .logo {
     height: 32px;
+    margin-right: 16px;
 }
 .header-center {
     flex: 1;
-    text-align: center;
+    display: flex;
+    justify-content: center;
 }
 .search-box {
     width: 300px;
@@ -25,7 +34,7 @@
 .header-link, .header-btn {
     color: #fff;
     text-decoration: none;
-    margin-left: 16px;
+    /* margin-left: 16px; /* gapで指定しているので不要な場合あり */
 }
 .header-btn {
     background: #fff;

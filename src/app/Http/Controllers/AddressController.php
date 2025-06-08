@@ -6,21 +6,39 @@ use Illuminate\Http\Request;
 
 class AddressController extends Controller
 {
-    public function edit()
+    public function edit($itemId)
     {
-        // 仮のダミー住所
-        $address = (object)[
-            'postcode' => '123-4567',
-            'address' => '東京都渋谷区道玄坂1-2-3',
-            'building' => 'コーポABC 101号室'
-        ];
-        return view('address.edit', compact('address'));
+        $item = \App\Models\Item::findOrFail($itemId);
+        $address = \App\Models\Address::where('user_id', auth()->id())->first();
+        return view('address.edit', compact('address', 'item'));
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $itemId)
     {
-        // バリデーション・保存処理（今回はダミー）
-        // ...
-        return redirect()->route('items.purchase', 1)->with('success', '住所を更新しました');
+        $request->validate([
+            'postcode' => 'required|string|max:8',
+            'address' => 'required|string|max:255',
+            'building' => 'nullable|string|max:255',
+        ]);
+
+        \App\Models\Address::updateOrCreate(
+            ['user_id' => auth()->id()],
+            [
+                'postal_code' => $request->postcode,
+                'address' => $request->address,
+                'building' => $request->building,
+            ]
+        );
+
+        // セッションに購入用住所を保存
+        session([
+            'purchase_address' => [
+                'postal_code' => $request->postcode,
+                'address'     => $request->address,
+                'building'    => $request->building,
+            ]
+        ]);
+
+        return redirect()->route('items.purchase', $itemId)->with('success', '住所を更新しました');
     }
 } 

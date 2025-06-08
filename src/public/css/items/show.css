@@ -1,3 +1,4 @@
+/* 商品詳細画面のスタイル */
 .item-detail-container {
     display: flex;
     gap: 40px;
@@ -45,6 +46,11 @@
     font-size: 14px;
     color: #888;
 }
+
+.buy-btn-wrapper {
+    text-align: left;
+    width: auto;
+}
 .buy-btn {
     background: #ff4b4b;
     color: #fff;
@@ -55,7 +61,11 @@
     font-weight: bold;
     margin-bottom: 24px;
     cursor: pointer;
+    display: inline-block;
+    width: auto;
+    min-width: 50px;
 }
+
 .item-section {
     margin-bottom: 24px;
 }
@@ -70,6 +80,7 @@
     margin-right: 8px;
     font-size: 13px;
 }
+
 .comment {
     margin-bottom: 8px;
 }
@@ -90,4 +101,7 @@
     border-radius: 4px;
     font-weight: bold;
     cursor: pointer;
-} 
+}
+.comment-content {
+    word-break: break-all;
+}

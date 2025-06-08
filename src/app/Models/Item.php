@@ -12,10 +12,12 @@ class Item extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'brand_name',
         'description',
         'price',
         'image_url',
         'condition_id',
+        'category_id',
         'is_sold'
     ];
 
@@ -24,14 +26,19 @@ class Item extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function condition()
+    public function category()
     {
-        return $this->belongsTo(Condition::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function condition()
+    {
+        return $this->belongsTo(Condition::class);
     }
 
     public function favorites()
@@ -47,5 +54,10 @@ class Item extends Model
     public function purchases()
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    public function getIsSoldAttribute()
+    {
+        return $this->purchases && $this->purchases->count() > 0;
     }
 }

@@ -1,0 +1,124 @@
+.items-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.items-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.item-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.item-card:hover {
+    transform: translateY(-5px);
+}
+
+.item-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.item-info {
+    padding: 15px;
+}
+
+.item-name {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.item-price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff6b6b;
+}
+
+.no-items {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+
+.no-items p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+}
+
+/* レスポンシブ対応 */
+/* PC (1400-1540px) */
+@media screen and (min-width: 1400px) {
+    .items-container {
+        max-width: 1400px;
+    }
+}
+
+/* タブレット (768-850px) */
+@media screen and (max-width: 850px) {
+    .items-container {
+        padding: 15px;
+    }
+
+    .items-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .items-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+/* モバイル */
+@media screen and (max-width: 767px) {
+    .items-container {
+        padding: 10px;
+    }
+
+    .items-title {
+        font-size: 20px;
+    }
+
+    .items-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .item-name {
+        font-size: 14px;
+    }
+
+    .item-price {
+        font-size: 16px;
+    }
+} 

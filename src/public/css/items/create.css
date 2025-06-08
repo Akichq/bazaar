@@ -1,0 +1,125 @@
+.item-create-container {
+    max-width: 600px;
+    margin: 40px auto 0;
+}
+.item-create-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 32px;
+}
+.item-create-image-block {
+    margin-bottom: 32px;
+}
+.item-create-image-label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.item-create-image-drop {
+    border: 2px dashed #ff6f6f;
+    border-radius: 8px;
+    padding: 32px 0;
+    text-align: center;
+    margin-bottom: 8px;
+}
+.item-create-image-btn {
+    color: #ff6f6f;
+    border: 1px solid #ff6f6f;
+    padding: 4px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    background: #fff;
+    display: inline-block;
+}
+.item-create-image-btn:hover {
+    background: #ff6f6f;
+    color: #fff;
+}
+.item-create-image-input {
+    display: none;
+}
+.item-create-error {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 4px;
+}
+.item-create-detail-block {
+    margin-bottom: 32px;
+}
+.item-create-detail-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.item-create-hr {
+    margin-bottom: 16px;
+}
+.item-create-form-group {
+    margin-bottom: 18px;
+}
+.item-create-label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.item-create-category-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.item-create-category-tag {
+    border: 1px solid #ff6f6f;
+    color: #ff6f6f;
+    border-radius: 16px;
+    padding: 4px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    background: #fff;
+    display: inline-block;
+}
+.item-create-category-tag:hover {
+    background: #ff6f6f;
+    color: #fff;
+}
+.item-create-category-checkbox {
+    display: none;
+}
+.item-create-select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.item-create-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.item-create-textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.item-create-btn {
+    width: 100%;
+    background: #ff6f6f;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 0;
+    border: none;
+    border-radius: 4px;
+    margin-top: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.item-create-btn:hover {
+    background: #ff4c4c;
+} 

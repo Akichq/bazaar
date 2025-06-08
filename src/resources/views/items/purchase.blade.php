@@ -7,7 +7,11 @@
         <div style="width: 60%;">
             <div style="display: flex; align-items: center;">
                 <div style="width: 120px; height: 120px; background: #eee; display: flex; align-items: center; justify-content: center; margin-right: 24px;">
-                    商品画像
+                    @if($item->image_url)
+                        <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" style="max-width: 100%; max-height: 100%; object-fit: cover;">
+                    @else
+                        商品画像
+                    @endif
                 </div>
                 <div>
                     <div style="font-size: 20px; font-weight: bold;">{{ $item->name ?? '商品名' }}</div>
@@ -17,22 +21,23 @@
             <hr style="margin: 32px 0;">
             <div style="margin-bottom: 24px;">
                 <div style="font-weight: bold; margin-bottom: 8px;">支払い方法</div>
-                <select style="width: 220px; padding: 6px 8px;">
-                    <option>選択してください</option>
-                    <option>クレジットカード</option>
-                    <option>コンビニ払い</option>
-                    <option>銀行振込</option>
+                <select name="payment_method" id="payment-method" style="width: 220px; padding: 6px 8px;" required>
+                    <option value="コンビニ払い" selected>コンビニ払い</option>
+                    <option value="クレジットカード">クレジットカード</option>
                 </select>
+                @error('payment_method')
+                    <p style="color: #FF6F6F; font-size: 0.85rem;">{{ $message }}</p>
+                @enderror
             </div>
             <hr style="margin: 32px 0;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
                 <div>
                     <div style="font-weight: bold; margin-bottom: 8px;">配送先</div>
-                    <div style="margin-bottom: 4px;">〒 {{ $address->postcode ?? 'XXX-YYYY' }}</div>
-                    <div>{{ $address->full_address ?? 'ここには住所と建物が入ります' }}</div>
+                    <div style="margin-bottom: 4px;">〒 {{ $addressData['postal_code'] ?? 'XXX-YYYY' }}</div>
+                    <div>{{ $addressData['address'] ?? 'ここには住所と建物が入ります' }}{{ !empty($addressData['building']) ? ' ' . $addressData['building'] : '' }}</div>
                 </div>
                 <div>
-                    <a href="{{ route('address.edit') }}" style="color: #3498db; font-size: 14px;">変更する</a>
+                    <a href="{{ route('address.edit', $item->id) }}" style="color: #3498db; font-size: 14px;">変更する</a>
                 </div>
             </div>
         </div>
@@ -44,13 +49,29 @@
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-top: 1px solid #ccc; padding-top: 16px;">
                 <div>支払い方法</div>
-                <div>{{ $payment_method ?? 'コンビニ払い' }}</div>
+                <div id="selected-payment-method">コンビニ払い</div>
             </div>
-            <form action="{{ route('items.purchase.store', $item->id) }}" method="POST">
+            <form id="payment-form" action="{{ route('items.purchase.store', $item->id) }}" method="POST">
                 @csrf
-                <button type="submit" style="width: 100%; background: #ff6f6f; color: #fff; font-size: 18px; font-weight: bold; padding: 12px 0; border: none; border-radius: 4px;">購入する</button>
+                <input type="hidden" name="payment_method" id="payment-method-input" value="コンビニ払い">
+                <button type="submit" id="submit-button" style="width: 100%; background: #ff6f6f; color: #fff; font-size: 18px; font-weight: bold; padding: 12px 0; border: none; border-radius: 4px;">購入する</button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethod = document.getElementById('payment-method');
+    const selectedPaymentMethod = document.getElementById('selected-payment-method');
+    const paymentMethodInput = document.getElementById('payment-method-input');
+
+    // 支払い方法の変更を監視
+    paymentMethod.addEventListener('change', function() {
+        const selectedValue = this.value;
+        selectedPaymentMethod.textContent = selectedValue;
+        paymentMethodInput.value = selectedValue;
+    });
+});
+</script>
 @endsection 
