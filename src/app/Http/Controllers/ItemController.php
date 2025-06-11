@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Condition;
 use App\Models\Address;
 use App\Http\Requests\CommentRequest;
+use App\Http\Requests\ExhibitionRequest;
+use App\Http\Requests\PurchaseRequest;
 
 class ItemController extends Controller
 {
@@ -15,36 +17,32 @@ class ItemController extends Controller
     {
         $query = Item::query();
 
-        // 検索機能（商品名部分一致）
-        if ($request->filled('keyword')) {
-            $query->where('name', 'like', '%' . $request->keyword . '%');
+        // キーワード検索
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+            $query->where('name', 'like', "%{$keyword}%");
         }
 
-        // マイリスト表示
-        if ($request->page === 'mylist') {
-            if (!auth()->check()) {
-                // 未ログイン時は空配列を返す
-                $items = collect();
-                return view('items.index', compact('items'));
-            }
+        // マイリスト表示の場合
+        if ($request->has('page') && $request->input('page') === 'mylist') {
+            if (auth()->check()) {
             $query->whereHas('favorites', function($q) {
                 $q->where('user_id', auth()->id());
             });
+            } else {
+                // 未認証ユーザーの場合は空のクエリを返す
+                $query->whereRaw('1 = 0');
+            }
         }
 
-        $user = auth()->user();
+        // 自分の商品は表示しない
+        if (auth()->check()) {
+            $query->where('user_id', '!=', auth()->id());
+        }
 
-        $items = $query->with(['categories', 'condition'])
-                      ->when($user, function($q) use ($user) {
-                          $q->where('user_id', '!=', $user->id);
-                      })
-                      ->get();
+        $items = $query->latest()->get();
 
-        return view('items.index', [
-            'items' => $items,
-            'isMylist' => $request->page === 'mylist',
-            'keyword' => $request->keyword,
-        ]);
+        return view('items.index', compact('items'));
     }
 
     public function show(Item $item)
@@ -95,7 +93,7 @@ class ItemController extends Controller
         return redirect()->route('items.show', $item->id);
     }
 
-    public function purchase(Item $item)
+    public function purchase(PurchaseRequest $request, Item $item)
     {
         if (!auth()->check()) {
             return redirect()->route('login');
@@ -114,7 +112,7 @@ class ItemController extends Controller
             ];
         }
 
-        $payment_method = 'コンビニ払い';
+        $payment_method = $request->payment_method ?? 'コンビニ払い';
         return view('items.purchase', compact('item', 'addressData', 'payment_method'));
     }
 
@@ -184,14 +182,28 @@ class ItemController extends Controller
                 return redirect($session->url);
             } else {
                 // コンビニ払いの場合
-                $item->purchases()->create([
+                // 住所を検索または作成
+                $address = Address::firstOrCreate(
+                    [
+                        'user_id' => auth()->id(),
+                        'postal_code' => $addressData['postal_code'],
+                        'address' => $addressData['address'],
+                        'building' => $addressData['building'],
+                    ]
+                );
+
+                // 購入情報を保存
+                $purchase = $item->purchases()->create([
                     'user_id' => auth()->id(),
-                    'address_id' => Address::where('user_id', auth()->id())->first()->id ?? null,
+                    'address_id' => $address->id,
                     'payment_method' => $request->payment_method,
                     'postal_code' => $addressData['postal_code'],
                     'address' => $addressData['address'],
                     'building' => $addressData['building'],
                 ]);
+
+                // 商品を売却済みに更新
+                $item->update(['is_sold' => true]);
                 // セッションの住所情報を削除
                 session()->forget('purchase_address');
 
@@ -221,6 +233,8 @@ class ItemController extends Controller
                     'address' => $addressData['address'] ?? '',
                     'building' => $addressData['building'] ?? '',
                 ]);
+                // 商品のis_soldフラグを更新
+                $item->update(['is_sold' => true]);
                 // セッションの住所情報を削除
                 session()->forget('purchase_address');
 
@@ -243,28 +257,18 @@ class ItemController extends Controller
         return view('items.create', compact('categories', 'conditions'));
     }
 
-    public function store(Request $request)
+    public function store(ExhibitionRequest $request)
     {
         try {
             if (!auth()->check()) {
                 return redirect()->route('login')->with('error', '商品を出品するにはログインが必要です。');
             }
 
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'brand_name' => 'nullable|string|max:255',
-                'description' => 'required|string',
-                'price' => 'required|integer|min:1',
-                'condition_id' => 'required|exists:conditions,id',
-                'categories' => 'required|array',
-                'categories.*' => 'exists:categories,id',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ]);
+            $validated = $request->validated();
 
             $imagePath = null;
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('items', 'public');
-                // $this->optimizeImage($imagePath); // GD拡張がない環境ではスキップ
             }
 
             $item = Item::create([

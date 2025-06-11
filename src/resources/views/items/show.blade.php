@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="{{ asset('css/items/show.css?v=' . time()) }}">
 
 <div class="item-detail-container">
-    <!-- 商品画像セクション -->
     <div class="item-detail-left">
         <div class="item-detail-image">
             @if($item->image_url)
@@ -14,9 +13,7 @@
         </div>
     </div>
 
-    <!-- 商品詳細情報セクション -->
     <div class="item-detail-right">
-        <!-- 商品名・ブランド・価格 -->
         <h1 class="item-title">{{ $item->name }}</h1>
         @if($item->brand_name)
             <div class="item-brand" style="font-size: 0.95em; color: #888; margin-bottom: 8px;">
@@ -25,7 +22,6 @@
         @endif
         <div class="item-price">¥{{ number_format($item->price) }} <span class="tax">(税込)</span></div>
 
-        <!-- いいね・コメント統計 -->
         <div class="item-stats">
             @auth
                 <form method="POST" action="{{ route('items.favorite', $item->id) }}" class="favorite-form">
@@ -50,12 +46,10 @@
             </div>
         </div>
 
-        <!-- 購入ボタン -->
         <div class="buy-btn-wrapper">
             <a href="{{ route('items.purchase', $item->id) }}" class="buy-btn">購入手続きへ</a>
         </div>
 
-        <!-- 商品説明 -->
         <div class="item-section">
             <h2 class="item-section-title">商品説明</h2>
             @if($item->color)
@@ -69,7 +63,6 @@
             @endif
         </div>
 
-        <!-- 商品の情報 -->
         <div class="item-section">
             <h2 class="item-section-title">商品の情報</h2>
             
@@ -94,11 +87,9 @@
             @endif
         </div>
 
-        <!-- コメント -->
         <div class="item-section">
             <h2 class="item-section-title">コメント({{ $item->comments->count() }})</h2>
 
-            <!-- 既存コメント表示 -->
             @if($item->comments->count() > 0)
                 @foreach($item->comments as $comment)
                     <div class="comment-item">
@@ -111,15 +102,14 @@
                 @endforeach
             @endif
 
-            <!-- コメント投稿フォーム -->
             @auth
                 <div class="comment-form">
                     <div class="comment-form-title">商品へのコメント</div>
                     <form method="POST" action="{{ route('items.comment', $item->id) }}">
                         @csrf
-                        <textarea 
-                            name="content" 
-                            class="comment-textarea" 
+                        <textarea
+                            name="content"
+                            class="comment-textarea"
                             placeholder="コメントを入力してください"
                         ></textarea>
                         @error('content')
@@ -136,4 +126,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

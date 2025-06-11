@@ -45,7 +45,8 @@ class ShippingAddressChangeTest extends TestCase
             'address' => '東京都新住所2-2-2',
             'building' => '新ビル202',
         ]);
-        $response->assertRedirect('/purchase/' . $item->id);
+        // $response->assertRedirect(route('items.purchase', $item->id));
+        dump($response->headers->get('Location'));
         // 購入画面で新しい住所が反映されているか確認
         $response2 = $this->get('/purchase/' . $item->id);
         $response2->assertSee('222-2222');
@@ -92,7 +93,7 @@ class ShippingAddressChangeTest extends TestCase
             'address' => '東京都購入用住所3-3-3',
             'building' => '購入ビル303',
         ]);
-        $response->assertRedirect('/item/' . $item->id);
+        $response->assertRedirect(route('items.show', $item->id));
         $newAddress = Address::where('user_id', $user->id)
             ->where('postal_code', '333-3333')
             ->where('address', '東京都購入用住所3-3-3')

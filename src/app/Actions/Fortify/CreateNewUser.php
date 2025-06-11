@@ -51,6 +51,6 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function redirectTo(): string
     {
-        return '/mypage/profile';
+        return '/login';
     }
 }

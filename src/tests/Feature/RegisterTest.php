@@ -17,8 +17,7 @@ class RegisterTest extends TestCase
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
-        $response->assertSessionHasErrors(['name']);
-        $response->assertSee('お名前を入力してください');
+        $response->assertSessionHasErrors(['name' => 'お名前を入力してください']);
     }
 
     public function test_メールアドレスが未入力の場合_バリデーションメッセージが表示される()
@@ -29,8 +28,7 @@ class RegisterTest extends TestCase
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ]);
-        $response->assertSessionHasErrors(['email']);
-        $response->assertSee('メールアドレスを入力してください');
+        $response->assertSessionHasErrors(['email' => 'メールアドレスを入力してください']);
     }
 
     public function test_パスワードが未入力の場合_バリデーションメッセージが表示される()
@@ -41,8 +39,7 @@ class RegisterTest extends TestCase
             'password' => '',
             'password_confirmation' => '',
         ]);
-        $response->assertSessionHasErrors(['password']);
-        $response->assertSee('パスワードを入力してください');
+        $response->assertSessionHasErrors(['password' => 'パスワードを入力してください']);
     }
 
     public function test_パスワードが7文字以下の場合_バリデーションメッセージが表示される()
@@ -53,8 +50,7 @@ class RegisterTest extends TestCase
             'password' => 'pass123',
             'password_confirmation' => 'pass123',
         ]);
-        $response->assertSessionHasErrors(['password']);
-        $response->assertSee('パスワードは8文字以上で入力してください');
+        $response->assertSessionHasErrors(['password' => 'パスワードは8文字以上で入力してください']);
     }
 
     public function test_パスワードが確認用と一致しない場合_バリデーションメッセージが表示される()
@@ -65,8 +61,7 @@ class RegisterTest extends TestCase
             'password' => 'password123',
             'password_confirmation' => 'different123',
         ]);
-        $response->assertSessionHasErrors(['password']);
-        $response->assertSee('パスワードと一致しません');
+        $response->assertSessionHasErrors(['password' => 'パスワードと一致しません']);
     }
 
     public function test_全て正しい場合_会員情報が登録されログイン画面に遷移する()

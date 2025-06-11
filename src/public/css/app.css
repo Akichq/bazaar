@@ -79,4 +79,19 @@ body {
 .item-name {
     font-size: 16px;
     margin-top: 8px;
+}
+.search-form {
+    display: flex;
+    align-items: center;
+}
+.hidden-button {
+    display: none;
+}
+.logout-form {
+    display: inline;
+}
+.logout-button {
+    background: none;
+    border: none;
+    cursor: pointer;
 } 

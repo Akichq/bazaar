@@ -50,7 +50,7 @@ class ItemDetailTest extends TestCase
         $response->assertSee($condition->name);
         $response->assertSee($category1->name);
         $response->assertSee($category2->name);
-        $response->assertSee('いいね');
+        $response->assertSee('☆');
         $response->assertSee('コメント');
         $response->assertSee('とても良い商品です！');
         $response->assertSee($user->name);

@@ -4,20 +4,37 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function create()
+    {
+        return view('auth.login');
+    }
+
     public function store(LoginRequest $request)
     {
-        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-            $request->session()->regenerate();
-            return redirect()->intended('/mypage');
+        $request->authenticate();
+
+        $request->session()->regenerate();
+
+        if (Auth::user()->created_at->isToday()) {
+            return redirect()->route('users.editProfile');
         }
 
-        return back()->withErrors([
-            'email' => 'ログイン情報が登録されていません。',
-        ])->withInput($request->only('email'));
+        return redirect('/');
     }
-} 
+
+    public function destroy(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+}

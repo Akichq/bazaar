@@ -6,19 +6,22 @@ use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RegisterRequest;
-use Laravel\Fortify\Contracts\RegisterResponse;
+use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
 
-class RegisteredUserController
+class RegisteredUserController extends Controller
 {
-    public function store(RegisterRequest $request): RegisterResponse
+    public function create()
+    {
+        return view('auth.register');
+    }
+
+    public function store(RegisterRequest $request): RedirectResponse
     {
         $user = app(CreateNewUser::class)->create($request->all());
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        // 新規登録時のみプロフィール編集画面へ
-        return redirect('/mypage/profile/edit');
+        return redirect('/login');
     }
-} 
+}

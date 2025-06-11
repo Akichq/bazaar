@@ -18,7 +18,6 @@ return new class extends Migration
             if (!Schema::hasColumn('users', 'address')) {
                 $table->string('address')->nullable();
             }
-            // profile_imageは既に存在するため、追加しない
         });
     }
 
@@ -31,4 +30,4 @@ return new class extends Migration
             $table->dropColumn(['postal_code', 'address']);
         });
     }
-}; 
+};

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\AddressRequest;
 
 class UserController extends Controller
 {
@@ -18,7 +20,9 @@ class UserController extends Controller
         // 購入した商品
         $purchased_items = \App\Models\Item::whereHas('purchases', function($q) use ($user) {
             $q->where('user_id', $user->id);
-        })->orderBy('created_at', 'desc')->get();
+        })->where('is_sold', true)
+          ->orderBy('created_at', 'desc')
+          ->get();
         return view('users.mypage', compact('user', 'exhibited_items', 'purchased_items'));
     }
 
@@ -28,23 +32,16 @@ class UserController extends Controller
     public function editProfile()
     {
         $user = Auth::user();
-        return view('users.profile.edit', compact('user'));
+        $address = \App\Models\Address::where('user_id', $user->id)->first();
+        return view('users.profile.edit', compact('user', 'address'));
     }
 
     /**
      * プロフィール情報を更新
      */
-    public function updateProfile(Request $request)
+    public function updateProfile(\App\Http\Requests\AddressRequest $request)
     {
         $user = \App\Models\User::find(Auth::id());
-        
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'postal_code' => ['required', 'string', 'max:8'],
-            'address' => ['required', 'string', 'max:255'],
-            'building' => ['nullable', 'string', 'max:255'],
-            'profile_image' => ['nullable', 'image', 'max:1024'],
-        ]);
 
         if ($request->hasFile('profile_image')) {
             if ($user->profile_image) {

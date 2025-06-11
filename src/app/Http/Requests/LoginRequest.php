@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class LoginRequest extends FormRequest
 {
@@ -33,7 +34,24 @@ class LoginRequest extends FormRequest
     {
         return [
             'email.required' => 'メールアドレスを入力してください',
+            'email.email' => '有効なメールアドレスを入力してください',
             'password.required' => 'パスワードを入力してください',
         ];
+    }
+
+    /**
+     * Attempt to authenticate the request's credentials.
+     *
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function authenticate()
+    {
+        if (!Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => ['ログイン情報が登録されていません。'],
+            ]);
+        }
     }
 }

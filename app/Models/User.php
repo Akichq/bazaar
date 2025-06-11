@@ -47,4 +47,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Item::class, 'favorites', 'user_id', 'item_id');
     }
-} 
+
+    public function isProfileCompleted(): bool
+    {
+        return !empty($this->name) &&
+            !empty($this->postal_code) &&
+            !empty($this->address);
+    }
+}

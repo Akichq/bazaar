@@ -21,11 +21,14 @@
     <div id="exhibit-list" class="mypage-list" style="display: flex; flex-wrap: wrap; gap: 32px;">
         @forelse($exhibited_items as $item)
             <a href="{{ route('items.show', $item->id) }}" style="text-decoration: none; color: inherit;">
-                <div style="width: 180px;">
+                <div style="width: 180px; position: relative;">
                     @if($item->image_url)
                         <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
                     @else
                         <div style="width: 180px; height: 180px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px;">商品画像</div>
+                    @endif
+                    @if($item->is_sold)
+                        <div style="position: absolute; top: 0; left: 0; background: rgba(255, 0, 0, 0.8); color: white; padding: 4px 8px; border-radius: 8px 0 8px 0; font-weight: bold;">SOLD</div>
                     @endif
                     <div style="text-align: center; font-size: 16px;">{{ $item->name }}</div>
                 </div>
@@ -37,11 +40,14 @@
     <div id="purchase-list" class="mypage-list" style="display: none; flex-wrap: wrap; gap: 32px;">
         @forelse($purchased_items as $item)
             <a href="{{ route('items.show', $item->id) }}" style="text-decoration: none; color: inherit;">
-                <div style="width: 180px;">
+                <div style="width: 180px; position: relative;">
                     @if($item->image_url)
                         <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
                     @else
                         <div style="width: 180px; height: 180px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px;">商品画像</div>
+                    @endif
+                    @if($item->is_sold)
+                        <div style="position: absolute; top: 0; left: 0; background: rgba(255, 0, 0, 0.8); color: white; padding: 4px 8px; border-radius: 8px 0 8px 0; font-weight: bold;">SOLD</div>
                     @endif
                     <div style="text-align: center; font-size: 16px;">{{ $item->name }}</div>
                 </div>

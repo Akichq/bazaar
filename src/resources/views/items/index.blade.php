@@ -1,18 +1,12 @@
 @extends('layouts.app')
 
-@push('styles')
-<link rel="stylesheet" href="{{ asset('css/items/index.css') }}">
-@endpush
-
 @section('content')
 <div class="tab-menu">
     <a href="{{ route('items.index') }}" class="tab {{ !request('page') || request('page') === 'recommend' ? 'active' : '' }}">おすすめ</a>
     <a href="{{ route('items.index', ['page' => 'mylist']) }}" class="tab {{ request('page') === 'mylist' ? 'active' : '' }}">マイリスト</a>
 </div>
 
-@if(request('page') === 'mylist' && Auth::guest())
-    <div style="text-align:center; margin: 40px 0; color: #888;">マイリストを表示するにはログインしてください。</div>
-@elseif($items->isEmpty())
+@if($items->isEmpty())
     <div style="text-align:center; margin: 40px 0; color: #888;">該当する商品がありません。</div>
 @else
 <div class="item-list">

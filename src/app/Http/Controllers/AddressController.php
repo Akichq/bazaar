@@ -3,25 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\AddressEditRequest;
+use App\Models\Address;
 
 class AddressController extends Controller
 {
     public function edit($itemId)
     {
         $item = \App\Models\Item::findOrFail($itemId);
-        $address = \App\Models\Address::where('user_id', auth()->id())->first();
+        
+        // セッションから住所情報を取得
+        $sessionAddress = session('purchase_address');
+        if ($sessionAddress) {
+            $address = (object)[
+                'postcode' => $sessionAddress['postal_code'],
+                'address' => $sessionAddress['address'],
+                'building' => $sessionAddress['building']
+            ];
+        } else {
+            // セッションにない場合はDBから取得
+            $address = Address::where('user_id', auth()->id())->first();
+        }
+        
         return view('address.edit', compact('address', 'item'));
     }
 
-    public function update(Request $request, $itemId)
+    public function update(\App\Http\Requests\AddressEditRequest $request, $itemId)
     {
-        $request->validate([
-            'postcode' => 'required|string|max:8',
-            'address' => 'required|string|max:255',
-            'building' => 'nullable|string|max:255',
-        ]);
-
-        \App\Models\Address::updateOrCreate(
+        $address = Address::updateOrCreate(
             ['user_id' => auth()->id()],
             [
                 'postal_code' => $request->postcode,
@@ -30,7 +39,6 @@ class AddressController extends Controller
             ]
         );
 
-        // セッションに購入用住所を保存
         session([
             'purchase_address' => [
                 'postal_code' => $request->postcode,
@@ -39,6 +47,7 @@ class AddressController extends Controller
             ]
         ]);
 
-        return redirect()->route('items.purchase', $itemId)->with('success', '住所を更新しました');
+        $item = \App\Models\Item::findOrFail($itemId);
+        return redirect()->route('items.purchase', ['item' => $item->id])->with('success', '住所を更新しました');
     }
 } 
