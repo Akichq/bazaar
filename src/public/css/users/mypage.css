@@ -27,8 +27,8 @@
     object-fit: cover;
 }
 .mypage-profile-placeholder {
-    font-size: 40px;
-    color: #bbb;
+    font-size: 20px;
+    color: #000000;
 }
 .mypage-username {
     font-size: 28px;
@@ -76,8 +76,16 @@
 }
 .mypage-item-card {
     width: 180px;
+    position: relative;
 }
 .mypage-item-image {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+.mypage-item-image-placeholder {
     width: 180px;
     height: 180px;
     background: #e0e0e0;
@@ -90,4 +98,26 @@
 .mypage-item-name {
     text-align: center;
     font-size: 16px;
+}
+.mypage-item-link {
+    text-decoration: none;
+    color: inherit;
+}
+.mypage-sold-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px 0 8px 0;
+    font-weight: bold;
+}
+.mypage-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+.mypage-list.hidden {
+    display: none;
 } 

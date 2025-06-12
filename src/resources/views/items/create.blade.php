@@ -81,38 +81,12 @@
     </form>
 </div>
 
-<style>
-.item-create-category-list .item-create-category-tag {
-    display: inline-block;
-    padding: 8px 16px;
-    margin: 4px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background-color: white;
-    color: #333;
-}
-.item-create-category-list .item-create-category-tag:hover {
-    background-color: #f0f0f0;
-}
-.item-create-category-list .item-create-category-tag.selected {
-    background-color: #ff6b6b !important;
-    color: white !important;
-    border-color: #ff6b6b !important;
-}
-.item-create-category-checkbox {
-    display: none;
-}
-</style>
 <script>
 function previewImage(input) {
     const preview = document.getElementById('image-preview');
     preview.innerHTML = '';
-    
     if (input.files && input.files[0]) {
         const reader = new FileReader();
-        
         reader.onload = function(e) {
             const img = document.createElement('img');
             img.src = e.target.result;
@@ -120,7 +94,6 @@ function previewImage(input) {
             img.style.maxHeight = '200px';
             preview.appendChild(img);
         }
-        
         reader.readAsDataURL(input.files[0]);
     }
 }
@@ -128,7 +101,6 @@ function previewImage(input) {
 document.addEventListener('DOMContentLoaded', function() {
     const categoryTags = document.querySelectorAll('.item-create-category-tag');
     categoryTags.forEach(tag => {
-        // 初期状態でチェックされているものにselectedクラスを追加
         if (tag.querySelector('input[type="checkbox"]').checked) {
             tag.classList.add('selected');
         }
@@ -141,4 +113,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection 
+@endsection

@@ -11,6 +11,9 @@
 .address-edit-form-group {
     margin-bottom: 28px;
 }
+.address-edit-form-group:last-of-type {
+    margin-bottom: 40px;
+}
 .address-edit-label {
     font-weight: bold;
     display: block;
@@ -33,10 +36,14 @@
     padding: 12px 0;
     border: none;
     border-radius: 4px;
-    margin-top: 16px;
     cursor: pointer;
     transition: background 0.2s;
 }
 .address-edit-btn:hover {
     background: #ff4c4c;
-} 
+}
+.error-message {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 4px;
+}

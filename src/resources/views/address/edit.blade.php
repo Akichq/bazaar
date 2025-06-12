@@ -1,23 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
-<div style="max-width: 600px; margin: 40px auto 0;">
-    <h2 style="text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 40px;">住所の変更</h2>
+<link rel="stylesheet" href="{{ asset('css/address/edit.css') }}">
+<div class="address-edit-container">
+    <h2 class="address-edit-title">住所の変更</h2>
     <form action="{{ route('address.update', $item->id) }}" method="POST">
         @csrf
-        <div style="margin-bottom: 28px;">
-            <label style="font-weight: bold; display: block; margin-bottom: 8px;">郵便番号</label>
-            <input type="text" name="postcode" value="{{ old('postcode', $address->postcode) }}" style="width: 100%; padding: 8px; font-size: 16px;">
+        <div class="address-edit-form-group">
+            <label class="address-edit-label">郵便番号</label>
+            <input type="text" name="postcode" value="{{ old('postcode', $address->postcode) }}" class="address-edit-input">
+            @error('postcode')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
         </div>
-        <div style="margin-bottom: 28px;">
-            <label style="font-weight: bold; display: block; margin-bottom: 8px;">住所</label>
-            <input type="text" name="address" value="{{ old('address', $address->address) }}" style="width: 100%; padding: 8px; font-size: 16px;">
+        <div class="address-edit-form-group">
+            <label class="address-edit-label">住所</label>
+            <input type="text" name="address" value="{{ old('address', $address->address) }}" class="address-edit-input">
+            @error('address')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
         </div>
-        <div style="margin-bottom: 40px;">
-            <label style="font-weight: bold; display: block; margin-bottom: 8px;">建物名</label>
-            <input type="text" name="building" value="{{ old('building', $address->building ?? '') }}" style="width: 100%; padding: 8px; font-size: 16px;">
+        <div class="address-edit-form-group">
+            <label class="address-edit-label">建物名</label>
+            <input type="text" name="building" value="{{ old('building', $address->building ?? '') }}" class="address-edit-input">
+            @error('building')
+                <div class="error-message">{{ $message }}</div>
+            @enderror
         </div>
-        <button type="submit" style="width: 100%; background: #ff6f6f; color: #fff; font-size: 18px; font-weight: bold; padding: 12px 0; border: none; border-radius: 4px;">更新する</button>
+        <button type="submit" class="address-edit-btn">更新する</button>
     </form>
 </div>
 @endsection 

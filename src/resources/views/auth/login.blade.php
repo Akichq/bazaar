@@ -10,14 +10,14 @@
             <label for="email">メールアドレス</label>
             <input id="email" type="email" name="email" value="{{ old('email') }}">
             @error('email')
-                <p style="color: #FF6F6F; margin: 4px 0 0 0;">{{ $message }}</p>
+                <p class="login-error-message">{{ $message }}</p>
             @enderror
         </div>
         <div class="form-group">
             <label for="password">パスワード</label>
             <input id="password" type="password" name="password">
             @error('password')
-                <p style="color: #FF6F6F; margin: 4px 0 0 0;">{{ $message }}</p>
+                <p class="login-error-message">{{ $message }}</p>
             @enderror
         </div>
         <button type="submit" class="login-btn">ログインする</button>

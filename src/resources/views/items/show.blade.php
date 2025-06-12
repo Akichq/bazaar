@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<link rel="stylesheet" href="{{ asset('css/items/show.css?v=' . time()) }}">
+<link rel="stylesheet" href="{{ asset('css/items/show.css') }}">
 
 <div class="item-detail-container">
     <div class="item-detail-left">
@@ -16,7 +16,7 @@
     <div class="item-detail-right">
         <h1 class="item-title">{{ $item->name }}</h1>
         @if($item->brand_name)
-            <div class="item-brand" style="font-size: 0.95em; color: #888; margin-bottom: 8px;">
+            <div class="item-brand">
                 {{ $item->brand_name }}
             </div>
         @endif
@@ -65,7 +65,7 @@
 
         <div class="item-section">
             <h2 class="item-section-title">商品の情報</h2>
-            
+
             @if($item->categories && $item->categories->count() > 0)
                 <div class="product-info-row">
                     <div class="info-label">カテゴリー</div>
@@ -113,7 +113,7 @@
                             placeholder="コメントを入力してください"
                         ></textarea>
                         @error('content')
-                            <div class="error-message" style="color: red; margin-top: 4px; font-size: 14px;">{{ $message }}</div>
+                            <div class="error-message">{{ $message }}</div>
                         @enderror
                         <button type="submit" class="comment-submit-btn">コメントを送信する</button>
                     </form>

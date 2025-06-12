@@ -1,55 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-<div style="max-width: 900px; margin: 40px auto 0;">
-    <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 24px;">
-        <div style="width: 100px; height: 100px; background: #ccc; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin-right: 40px;">
+<link rel="stylesheet" href="{{ asset('css/users/mypage.css') }}">
+
+<div class="mypage-container">
+    <div class="mypage-profile-row">
+        <div class="mypage-profile-image-wrap">
             @if($user->profile_image)
-                <img src="{{ asset('storage/profile_images/' . $user->profile_image) }}" alt="プロフィール画像" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                <img src="{{ asset('storage/profile_images/' . $user->profile_image) }}" alt="プロフィール画像" class="mypage-profile-image">
             @else
-                <span>●</span>
+                <span class="mypage-profile-placeholder">NO IMAGE</span>
             @endif
         </div>
-        <div style="font-size: 28px; font-weight: bold;">{{ $user->name }}</div>
-        <a href="{{ route('users.editProfile') }}" style="margin-left: 40px; border: 2px solid #ff6f6f; color: #ff6f6f; background: #fff; font-weight: bold; padding: 8px 24px; border-radius: 6px; font-size: 16px; text-decoration: none;">プロフィールを編集</a>
+        <div class="mypage-username">{{ $user->name }}</div>
+        <a href="{{ route('users.editProfile') }}" class="mypage-edit-btn">プロフィールを編集</a>
     </div>
-    <div style="display: flex; align-items: center; margin-bottom: 16px;">
-        <div id="tab-exhibit" class="mypage-tab active" style="font-weight: bold; color: #ff6f6f; border-bottom: 2px solid #ff6f6f; padding-bottom: 4px; margin-right: 32px; cursor: pointer;">出品した商品</div>
-        <div id="tab-purchase" class="mypage-tab" style="color: #888; font-weight: bold; padding-bottom: 4px; cursor: pointer;">購入した商品</div>
+    <div class="mypage-tab-row">
+        <div id="tab-exhibit" class="mypage-tab mypage-tab-active">出品した商品</div>
+        <div id="tab-purchase" class="mypage-tab">購入した商品</div>
     </div>
-    <hr style="margin-bottom: 32px;">
-    <div id="exhibit-list" class="mypage-list" style="display: flex; flex-wrap: wrap; gap: 32px;">
+    <hr class="mypage-hr">
+    <div id="exhibit-list" class="mypage-list">
         @forelse($exhibited_items as $item)
-            <a href="{{ route('items.show', $item->id) }}" style="text-decoration: none; color: inherit;">
-                <div style="width: 180px; position: relative;">
+            <a href="{{ route('items.show', $item->id) }}" class="mypage-item-link">
+                <div class="mypage-item-card">
                     @if($item->image_url)
-                        <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+                        <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" class="mypage-item-image">
                     @else
-                        <div style="width: 180px; height: 180px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px;">商品画像</div>
+                        <div class="mypage-item-image-placeholder">商品画像</div>
                     @endif
                     @if($item->is_sold)
-                        <div style="position: absolute; top: 0; left: 0; background: rgba(255, 0, 0, 0.8); color: white; padding: 4px 8px; border-radius: 8px 0 8px 0; font-weight: bold;">SOLD</div>
+                        <div class="mypage-sold-badge">SOLD</div>
                     @endif
-                    <div style="text-align: center; font-size: 16px;">{{ $item->name }}</div>
+                    <div class="mypage-item-name">{{ $item->name }}</div>
                 </div>
             </a>
         @empty
             <div>出品した商品はありません。</div>
         @endforelse
     </div>
-    <div id="purchase-list" class="mypage-list" style="display: none; flex-wrap: wrap; gap: 32px;">
+    <div id="purchase-list" class="mypage-list hidden">
         @forelse($purchased_items as $item)
-            <a href="{{ route('items.show', $item->id) }}" style="text-decoration: none; color: inherit;">
-                <div style="width: 180px; position: relative;">
+            <a href="{{ route('items.show', $item->id) }}" class="mypage-item-link">
+                <div class="mypage-item-card">
                     @if($item->image_url)
-                        <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" style="width: 180px; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;">
+                        <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" class="mypage-item-image">
                     @else
-                        <div style="width: 180px; height: 180px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 8px;">商品画像</div>
+                        <div class="mypage-item-image-placeholder">商品画像</div>
                     @endif
                     @if($item->is_sold)
-                        <div style="position: absolute; top: 0; left: 0; background: rgba(255, 0, 0, 0.8); color: white; padding: 4px 8px; border-radius: 8px 0 8px 0; font-weight: bold;">SOLD</div>
+                        <div class="mypage-sold-badge">SOLD</div>
                     @endif
-                    <div style="text-align: center; font-size: 16px;">{{ $item->name }}</div>
+                    <div class="mypage-item-name">{{ $item->name }}</div>
                 </div>
             </a>
         @empty

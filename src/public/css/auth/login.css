@@ -51,4 +51,9 @@
     color: #3498db;
     font-size: 14px;
     text-decoration: none;
+}
+.login-error-message {
+    color: #FF6F6F;
+    margin: 4px 0 0 0;
+    font-size: 13px;
 } 
