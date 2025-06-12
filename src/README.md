@@ -1,64 +1,100 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# コーチテックフリマ
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 環境構築
 
-## About Laravel
+1. **リポジトリをクローン**
+   ```bash
+   git clone https://github.com/Akichq/bazaar.git
+   cd bazaar
+   ```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+2. **Dockerイメージのビルド・起動**
+   ```bash
+   docker-compose build
+   docker-compose up -d
+   ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+3. **コンテナに入る**
+   ```bash
+   docker-compose exec app bash
+   ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+4. **依存パッケージインストール**
+   ```bash
+   composer install
+   ```
 
-## Learning Laravel
+5. **.envファイルの作成・編集**
+   ```bash
+   cp .env.example .env
+   # 必要に応じてDBやメール設定を編集
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+6. **アプリケーションキー発行**
+   ```bash
+   php artisan key:generate
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+7. **マイグレーション・シーディング**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-## Laravel Sponsors
+8. **ストレージリンク作成**
+   ```bash
+   php artisan storage:link
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## 使用技術
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+- PHP 7.4.9
+- Laravel 8.83.8
+- MySQL
+- Docker
+- Stripe（テスト決済用）
+- Fortify（認証）
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ER図
 
-## Code of Conduct
+```mermaid
+erDiagram
+    users ||--o{ items : "出品"
+    users ||--o{ favorites : "いいね"
+    users ||--o{ comments : "コメント"
+    users ||--o{ purchases : "購入"
+    users ||--o{ addresses : "住所"
+    items ||--o{ comments : "コメント"
+    items ||--o{ favorites : "いいね"
+    items ||--o{ purchases : "購入"
+    items }o--o{ categories : "カテゴリ"
+    items }o--|| conditions : "状態"
+    purchases }o--|| addresses : "配送先"
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## URL
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- 開発環境: [http://localhost/](http://localhost/)
+- phpMyAdmin    http://localhost:8080/
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 画面一覧
+
+- 商品一覧画面（トップ画面）： `/`
+- 商品一覧画面（トップ画面）_マイリスト： `/?page=mylist`
+- 会員登録画面： `/register`
+- ログイン画面： `/login`
+- 商品詳細画面： `/item/:item_id`
+- 商品購入画面： `/purchase/:item_id`
+- 送付先住所変更画面： `/purchase/address/:item_id`
+- 商品出品画面： `/sell`
+- プロフィール画面： `/mypage`
+- プロフィール編集画面（設定画面）： `/mypage/profile`
+- プロフィール画面_購入した商品一覧： `/mypage?page=buy`
+- プロフィール画面_出品した商品一覧： `/mypage?page=sell`
