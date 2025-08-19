@@ -17,16 +17,27 @@ class ItemSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::first();
+        $users = User::all();
         $categories = Category::all();
         $conditions = Condition::all();
 
-        if (!$user || $categories->isEmpty() || $conditions->isEmpty()) {
+        if ($users->isEmpty() || $categories->isEmpty() || $conditions->isEmpty()) {
+            return;
+        }
+
+        // 田中太郎（CO01～CO05）
+        $tanaka = $users->where('email', 'tanaka@example.com')->first();
+        // 佐藤花子（CO06～CO10）
+        $sato = $users->where('email', 'sato@example.com')->first();
+
+        if (!$tanaka || !$sato) {
             return;
         }
 
         $items = [
+            // 田中太郎の商品（CO01～CO05）
             [
+                'user_id' => $tanaka->id,
                 'name' => '腕時計',
                 'price' => 15000,
                 'description' => 'スタイリッシュなデザインのメンズ腕時計',
@@ -34,6 +45,7 @@ class ItemSeeder extends Seeder
                 'condition' => '良好',
             ],
             [
+                'user_id' => $tanaka->id,
                 'name' => 'HDD',
                 'price' => 5000,
                 'description' => '高速で信頼性の高いハードディスク',
@@ -41,6 +53,7 @@ class ItemSeeder extends Seeder
                 'condition' => '目立った傷や汚れなし',
             ],
             [
+                'user_id' => $tanaka->id,
                 'name' => '玉ねぎ3束',
                 'price' => 300,
                 'description' => '新鮮な玉ねぎ3束のセット',
@@ -48,6 +61,7 @@ class ItemSeeder extends Seeder
                 'condition' => 'やや傷や汚れあり',
             ],
             [
+                'user_id' => $tanaka->id,
                 'name' => '革靴',
                 'price' => 4000,
                 'description' => 'クラシックなデザインの革靴',
@@ -55,13 +69,16 @@ class ItemSeeder extends Seeder
                 'condition' => '状態が悪い',
             ],
             [
+                'user_id' => $tanaka->id,
                 'name' => 'ノートPC',
                 'price' => 45000,
                 'description' => '高性能なノートパソコン',
                 'image_url' => 'items/Living_Room_Laptop.jpg',
                 'condition' => '良好',
             ],
+            // 佐藤花子の商品（CO06～CO10）
             [
+                'user_id' => $sato->id,
                 'name' => 'マイク',
                 'price' => 8000,
                 'description' => '高音質のレコーディング用マイク',
@@ -69,6 +86,7 @@ class ItemSeeder extends Seeder
                 'condition' => '目立った傷や汚れなし',
             ],
             [
+                'user_id' => $sato->id,
                 'name' => 'ショルダーバッグ',
                 'price' => 3500,
                 'description' => 'おしゃれなショルダーバッグ',
@@ -76,6 +94,7 @@ class ItemSeeder extends Seeder
                 'condition' => 'やや傷や汚れあり',
             ],
             [
+                'user_id' => $sato->id,
                 'name' => 'タンブラー',
                 'price' => 500,
                 'description' => '使いやすいタンブラー',
@@ -83,6 +102,7 @@ class ItemSeeder extends Seeder
                 'condition' => '状態が悪い',
             ],
             [
+                'user_id' => $sato->id,
                 'name' => 'コーヒーミル',
                 'price' => 4000,
                 'description' => '手動のコーヒーミル',
@@ -90,6 +110,7 @@ class ItemSeeder extends Seeder
                 'condition' => '良好',
             ],
             [
+                'user_id' => $sato->id,
                 'name' => 'メイクセット',
                 'price' => 2500,
                 'description' => '便利なメイクアップセット',
@@ -102,7 +123,7 @@ class ItemSeeder extends Seeder
             $condition = $conditions->where('name', $itemData['condition'])->first();
             $category = $categories->random();
             $item = Item::create([
-                'user_id' => $user->id,
+                'user_id' => $itemData['user_id'],
                 'name' => $itemData['name'],
                 'brand_name' => null,
                 'description' => $itemData['description'],

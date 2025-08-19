@@ -14,7 +14,12 @@ class Purchase extends Model
         'item_id',
         'address_id',
         'payment_method',
-        'stripe_payment_id'
+        'stripe_payment_id',
+        'is_completed'
+    ];
+
+    protected $casts = [
+        'is_completed' => 'boolean',
     ];
 
     public function user()
@@ -30,5 +35,29 @@ class Purchase extends Model
     public function address()
     {
         return $this->belongsTo(Address::class);
+    }
+
+    /**
+     * メッセージとのリレーション
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'transaction_id');
+    }
+
+    /**
+     * 新着メッセージ数を取得
+     */
+    public function getUnreadMessageCount()
+    {
+        return $this->messages()->where('is_read', false)->count();
+    }
+
+    /**
+     * 取引状態判定
+     */
+    public function isInTransaction()
+    {
+        return !$this->is_completed && $this->created_at > now()->subDays(30);
     }
 }

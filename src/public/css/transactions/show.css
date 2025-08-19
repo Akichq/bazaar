@@ -1,0 +1,417 @@
+/* 全体レイアウト */
+.chat-layout {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ヘッダー */
+.chat-header {
+    background: #000;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 30px;
+    filter: brightness(0) invert(1);
+}
+
+/* メインエリア */
+.chat-main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* 左サイドバー */
+.chat-sidebar {
+    width: 250px;
+    background: #333333;
+    border-right: 1px solid #404040;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-title {
+    padding: 20px 16px 12px;
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: bold;
+    border-bottom: 1px solid #404040;
+}
+
+.transaction-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.transaction-item {
+    display: block;
+    padding: 12px 16px;
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px solid #404040;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.transaction-item:hover {
+    background: #404040;
+}
+
+.transaction-item.active {
+    background: #ff6f6f;
+    color: #fff;
+}
+
+/* メインコンテンツ */
+.chat-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+/* 取引ヘッダー */
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #ccc;
+    border-radius: 50%;
+}
+
+.user-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.complete-btn {
+    background: #ff6f6f;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.complete-btn:hover {
+    background: #ff5252;
+}
+
+/* 商品詳細 */
+.product-details {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.product-image {
+    width: 120px;
+    height: 120px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.product-price {
+    font-size: 16px;
+    color: #ff6f6f;
+    font-weight: bold;
+}
+
+/* メッセージエリア */
+.message-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    background: #f9f9f9;
+}
+
+.no-messages {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-top: 48px;
+}
+
+.message-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.message-avatar {
+    width: 32px;
+    height: 32px;
+    background: #ccc;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.message-content {
+    flex: 1;
+    max-width: 70%;
+}
+
+.message-user {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.message-text {
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message-own .message-text {
+    background: #ff6f6f;
+    color: #fff;
+}
+
+.message-image img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.message-actions {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.edit-btn,
+.delete-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* メッセージ投稿フォーム */
+.message-form-container {
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    padding: 16px 24px;
+}
+
+.message-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.message-input {
+    width: 100%;
+    min-height: 60px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.message-input:focus {
+    outline: none;
+    border-color: #ff6f6f;
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.image-label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.image-btn {
+    display: inline-block;
+    background: #fff;
+    color: #ff6f6f;
+    padding: 8px 16px;
+    border: 1px solid #ff6f6f;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.image-btn:hover {
+    background: #ff6f6f;
+    color: #fff;
+}
+
+.send-btn {
+    background: #f0f0f0;
+    color: #666;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-btn:hover {
+    background: #e0e0e0;
+}
+
+.send-icon {
+    font-size: 16px;
+}
+
+/* 編集フォーム */
+.edit-form {
+    margin-top: 8px;
+}
+
+.edit-input {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.edit-input:focus {
+    outline: none;
+    border-color: #ff6f6f;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.save-btn,
+.cancel-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.save-btn {
+    background: #ff6f6f;
+    color: #fff;
+}
+
+.save-btn:hover {
+    background: #ff5252;
+}
+
+.cancel-btn {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.cancel-btn:hover {
+    background: #e0e0e0;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .chat-sidebar {
+        width: 200px;
+    }
+
+    .transaction-header {
+        padding: 16px;
+    }
+
+    .product-details {
+        padding: 16px;
+    }
+
+    .message-area {
+        padding: 16px;
+    }
+
+    .message-form-container {
+        padding: 12px 16px;
+    }
+
+    .message-input {
+        min-height: 50px;
+    }
+}

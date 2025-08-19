@@ -13,6 +13,14 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user();
+        
+        // 評価平均値を取得
+        $ratingController = new \App\Http\Controllers\RatingController();
+        $averageRating = $ratingController->getAverageRating($user->id);
+        
+        // 取引通知数を計算
+        $transactionNotificationCount = $this->calculateTransactionNotificationCount($user->id);
+        
         // 出品した商品
         $exhibited_items = \App\Models\Item::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
@@ -23,7 +31,75 @@ class UserController extends Controller
         })->where('is_sold', true)
           ->orderBy('created_at', 'desc')
           ->get();
-        return view('users.mypage', compact('user', 'exhibited_items', 'purchased_items'));
+          
+        return view('users.mypage', compact('user', 'exhibited_items', 'purchased_items', 'averageRating', 'transactionNotificationCount'));
+    }
+
+    /**
+     * 取引通知数を計算
+     */
+    private function calculateTransactionNotificationCount($userId)
+    {
+        // 購入した商品の新着メッセージ数
+        $purchasedCount = \App\Models\Purchase::where('user_id', $userId)
+            ->where('is_completed', false)
+            ->withCount(['messages' => function($query) {
+                $query->where('is_read', false);
+            }])
+            ->get()
+            ->sum('messages_count');
+            
+        // 出品した商品の新着メッセージ数
+        $soldCount = \App\Models\Item::where('user_id', $userId)
+            ->whereHas('purchases', function($query) {
+                $query->where('is_completed', false);
+            })
+            ->with(['purchases.messages' => function($query) {
+                $query->where('is_read', false);
+            }])
+            ->get()
+            ->flatMap->purchases
+            ->flatMap->messages
+            ->count();
+            
+        return $purchasedCount + $soldCount;
+    }
+
+    /**
+     * 取引一覧を新規メッセージ順にソート
+     */
+    private function getSortedTransactions($userId)
+    {
+        // 購入した商品の取引を取得 - 新規メッセージ順にソート
+        $purchasedTransactions = \App\Models\Purchase::where('user_id', $userId)
+            ->where('is_completed', false)
+            ->with(['item', 'item.user', 'messages' => function($query) {
+                $query->orderBy('created_at', 'desc');
+            }])
+            ->get()
+            ->sortByDesc(function($transaction) {
+                return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
+            });
+            
+        // 出品した商品の取引を取得 - 新規メッセージ順にソート
+        $soldTransactions = \App\Models\Item::where('user_id', $userId)
+            ->whereHas('purchases', function($query) {
+                $query->where('is_completed', false);
+            })
+            ->with(['purchases' => function($query) {
+                $query->with(['user', 'messages' => function($subQuery) {
+                    $subQuery->orderBy('created_at', 'desc');
+                }]);
+            }])
+            ->get()
+            ->map(function($item) {
+                $item->purchases = $item->purchases->sortByDesc(function($transaction) {
+                    return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
+                });
+                return $item;
+            });
+            
+        return compact('purchasedTransactions', 'soldTransactions');
     }
 
     /**

@@ -207,7 +207,9 @@ class ItemController extends Controller
                 // セッションの住所情報を削除
                 session()->forget('purchase_address');
 
-                return redirect()->route('items.show', $item->id)->with('success', '購入が完了しました！コンビニでのお支払いをお願いします。');
+                // 購入した取引のIDを取得してチャット画面に遷移
+                $purchase = $item->purchases()->where('user_id', auth()->id())->latest()->first();
+                return redirect()->route('transactions.show', $purchase->id)->with('success', '購入が完了しました！コンビニでのお支払いをお願いします。');
             }
         } catch (\Exception $e) {
             return redirect()->route('items.purchase', $item->id)
@@ -238,7 +240,9 @@ class ItemController extends Controller
                 // セッションの住所情報を削除
                 session()->forget('purchase_address');
 
-                return redirect()->route('items.show', $item->id)->with('success', '購入が完了しました！');
+                // 購入した取引のIDを取得してチャット画面に遷移
+                $purchase = $item->purchases()->where('user_id', auth()->id())->latest()->first();
+                return redirect()->route('transactions.show', $purchase->id)->with('success', '購入が完了しました！');
             }
         } catch (\Exception $e) {
             return redirect()->route('items.show', $item->id)
