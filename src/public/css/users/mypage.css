@@ -249,6 +249,19 @@
     padding: 0;
     z-index: 10;
 }
+
+.mypage-item-card .completed-badge {
+    background: #28a745;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 10;
+}
 .mypage-item-name {
     text-align: center;
     font-size: 16px;

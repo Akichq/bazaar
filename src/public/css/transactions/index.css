@@ -117,3 +117,16 @@
     border-radius: 12px;
     align-self: flex-start;
 }
+
+.completed-badge {
+    background: #28a745;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 10;
+}

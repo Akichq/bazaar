@@ -41,3 +41,4 @@ class Rating extends Model
         return $this->belongsTo(Purchase::class, 'transaction_id');
     }
 }
+

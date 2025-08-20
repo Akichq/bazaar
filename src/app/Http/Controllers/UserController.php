@@ -40,7 +40,7 @@ class UserController extends Controller
      */
     private function calculateTransactionNotificationCount($userId)
     {
-        // 購入した商品の新着メッセージ数
+        // 購入した商品の新着メッセージ数（取引完了済みも含む）
         $purchasedCount = \App\Models\Purchase::where('user_id', $userId)
             ->where('is_completed', false)
             ->withCount(['messages' => function($query) {
@@ -49,7 +49,7 @@ class UserController extends Controller
             ->get()
             ->sum('messages_count');
             
-        // 出品した商品の新着メッセージ数
+        // 出品した商品の新着メッセージ数（取引完了済みも含む）
         $soldCount = \App\Models\Item::where('user_id', $userId)
             ->whereHas('purchases', function($query) {
                 $query->where('is_completed', false);

@@ -22,7 +22,6 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
     }
 
     /**
@@ -51,6 +50,6 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::registerView(function () {
             return view('auth.register');
         });
-        //Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+
     }
 }

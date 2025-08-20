@@ -28,13 +28,30 @@ class TransactionController extends Controller
             
         // 出品した商品の取引を取得 - 新規メッセージ順にソート
         $soldTransactions = Item::where('user_id', $user->id)
-            ->whereHas('purchases', function($query) {
-                $query->where('is_completed', false);
+            ->whereHas('purchases', function($query) use ($user) {
+                $query->where(function($q) use ($user) {
+                    $q->where('is_completed', false)
+                      ->orWhere(function($subQ) use ($user) {
+                          $subQ->where('is_completed', true)
+                               ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                   $ratingQ->where('user_id', $user->id);
+                               });
+                      });
+                });
             })
-            ->with(['purchases' => function($query) {
-                $query->with(['user', 'messages' => function($subQuery) {
+            ->with(['purchases' => function($query) use ($user) {
+                $query->where(function($q) use ($user) {
+                    $q->where('is_completed', false)
+                      ->orWhere(function($subQ) use ($user) {
+                          $subQ->where('is_completed', true)
+                               ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                   $ratingQ->where('user_id', $user->id);
+                               });
+                      });
+                })
+                ->with(['user', 'messages' => function($subQuery) {
                     $subQuery->orderBy('created_at', 'desc');
-                }]);
+                }, 'ratings']);
             }])
             ->get()
             ->map(function($item) {
@@ -125,24 +142,52 @@ class TransactionController extends Controller
      */
     private function getOtherTransactions($userId, $currentTransactionId)
     {
-        // 購入した商品の取引
+        // 購入した商品の取引 - 新規メッセージ順にソート
         $purchasedTransactions = Purchase::where('user_id', $userId)
             ->where('id', '!=', $currentTransactionId)
             ->where('is_completed', false)
-            ->with(['item'])
-            ->get();
-            
-        // 出品した商品の取引
-        $soldTransactions = Item::where('user_id', $userId)
-            ->whereHas('purchases', function($query) use ($currentTransactionId) {
-                $query->where('id', '!=', $currentTransactionId)
-                      ->where('is_completed', false);
-            })
-            ->with(['purchases' => function($query) {
-                $query->with(['user']);
+            ->with(['item', 'messages' => function($query) {
+                $query->orderBy('created_at', 'desc');
             }])
             ->get()
-            ->flatMap->purchases;
+            ->sortByDesc(function($transaction) {
+                return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
+            });
+            
+        // 出品した商品の取引 - 新規メッセージ順にソート
+        $soldTransactions = Item::where('user_id', $userId)
+            ->whereHas('purchases', function($query) use ($currentTransactionId, $userId) {
+                $query->where('id', '!=', $currentTransactionId)
+                      ->where(function($q) use ($userId) {
+                          $q->where('is_completed', false)
+                            ->orWhere(function($subQ) use ($userId) {
+                                $subQ->where('is_completed', true)
+                                     ->whereDoesntHave('ratings', function($ratingQ) use ($userId) {
+                                         $ratingQ->where('user_id', $userId);
+                                     });
+                            });
+                      });
+            })
+            ->with(['purchases' => function($query) use ($currentTransactionId, $userId) {
+                $query->where('id', '!=', $currentTransactionId)
+                      ->where(function($q) use ($userId) {
+                          $q->where('is_completed', false)
+                            ->orWhere(function($subQ) use ($userId) {
+                                $subQ->where('is_completed', true)
+                                     ->whereDoesntHave('ratings', function($ratingQ) use ($userId) {
+                                         $ratingQ->where('user_id', $userId);
+                                     });
+                            });
+                      })
+                      ->with(['user', 'messages' => function($subQuery) {
+                          $subQuery->orderBy('created_at', 'desc');
+                      }, 'ratings']);
+            }])
+            ->get()
+            ->flatMap->purchases
+            ->sortByDesc(function($transaction) {
+                return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
+            });
             
         return $purchasedTransactions->merge($soldTransactions);
     }

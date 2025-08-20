@@ -92,3 +92,4 @@ class MessageController extends Controller
         return redirect()->route('transactions.show', $transactionId)->with('success', 'メッセージを削除しました');
     }
 }
+

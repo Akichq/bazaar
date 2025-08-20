@@ -60,4 +60,28 @@ class Purchase extends Model
     {
         return !$this->is_completed && $this->created_at > now()->subDays(30);
     }
+
+    /**
+     * 評価とのリレーション
+     */
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class, 'transaction_id');
+    }
+
+    /**
+     * 完全に完了したかどうか判定（両者とも評価済み）
+     */
+    public function isFullyCompleted()
+    {
+        return $this->is_completed && $this->ratings()->count() >= 2;
+    }
+
+    /**
+     * 特定ユーザーが評価済みかどうか判定
+     */
+    public function isRatedByUser($userId)
+    {
+        return $this->ratings()->where('user_id', $userId)->exists();
+    }
 }

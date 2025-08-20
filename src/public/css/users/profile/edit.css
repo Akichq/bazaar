@@ -1,0 +1,94 @@
+.profile-edit-container {
+    background: #fff;
+    min-height: 100vh;
+}
+
+.profile-edit-form {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 32px 24px;
+    border-radius: 8px;
+}
+
+.profile-edit-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 32px;
+}
+
+.profile-image-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.profile-image {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eee;
+}
+
+.profile-image-placeholder {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: #eee;
+}
+
+.image-upload-label {
+    margin-top: 8px;
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.image-upload-btn {
+    color: #ff6f6f;
+    border: 1px solid #ff6f6f;
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.form-input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+    margin-top: 4px;
+}
+
+.error-message {
+    color: #ff6f6f;
+    font-size: 0.85rem;
+}
+
+.form-submit {
+    text-align: center;
+}
+
+.submit-btn {
+    background: #ff6f6f;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1rem;
+}

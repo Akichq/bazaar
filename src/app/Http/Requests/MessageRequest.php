@@ -45,3 +45,4 @@ class MessageRequest extends FormRequest
         ];
     }
 }
+

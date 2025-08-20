@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.chat')
 
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/transactions/show.css') }}">
@@ -7,7 +7,9 @@
     {{-- ヘッダー --}}
     <div class="chat-header">
         <div class="logo">
-            <img src="{{ asset('logo.svg') }}" alt="CT COACHTECH">
+            <a href="{{ route('items.index') }}">
+                <img src="{{ asset('logo.svg') }}" alt="CT COACHTECH">
+            </a>
         </div>
     </div>
 
@@ -33,9 +35,11 @@
                     <div class="user-avatar"></div>
                     <div class="user-name">{{ $otherUser->name }}さんとの取引画面</div>
                 </div>
-                <div class="complete-button">
-                    <button class="complete-btn">取引を完了する</button>
-                </div>
+                @if(!$transaction->is_completed && $transaction->user_id === auth()->id())
+                    <div class="complete-button">
+                        <button class="complete-btn" onclick="showRatingModal()">取引を完了する</button>
+                    </div>
+                @endif
             </div>
 
             {{-- 商品詳細 --}}
@@ -55,24 +59,43 @@
                     <div class="no-messages">まだメッセージはありません。</div>
                 @else
                     @foreach($transaction->messages as $message)
-                        <div class="message-item {{ $message->user_id === auth()->id() ? 'message-own' : 'message-other' }}" data-message-id="{{ $message->id }}">
-                            <div class="message-avatar"></div>
-                            <div class="message-content">
-                                <div class="message-user">{{ $message->user->name }}</div>
-                                <div class="message-text">{{ $message->content }}</div>
-                                @if($message->image_url)
-                                    <div class="message-image">
-                                        <img src="{{ asset('storage/' . $message->image_url) }}" alt="添付画像">
-                                    </div>
-                                @endif
-                                @if($message->user_id === auth()->id())
+                        @if($message->user_id === auth()->id())
+                            {{-- 自分のメッセージ（右側） --}}
+                            <div class="message-item message-own" data-message-id="{{ $message->id }}">
+                                <div class="message-header">
+                                    <div class="message-user">{{ $message->user->name }}</div>
+                                    <div class="message-avatar"></div>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-text">{{ $message->content }}</div>
+                                    @if($message->image_url)
+                                        <div class="message-image">
+                                            <img src="{{ asset('storage/' . $message->image_url) }}" alt="添付画像">
+                                        </div>
+                                    @endif
                                     <div class="message-actions">
                                         <button class="edit-btn" onclick="editMessage({{ $message->id }})">編集</button>
                                         <button class="delete-btn" onclick="deleteMessage({{ $message->id }})">削除</button>
                                     </div>
-                                @endif
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            {{-- 相手のメッセージ（左側） --}}
+                            <div class="message-item message-other" data-message-id="{{ $message->id }}">
+                                <div class="message-header">
+                                    <div class="message-avatar"></div>
+                                    <div class="message-user">{{ $message->user->name }}</div>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-text">{{ $message->content }}</div>
+                                    @if($message->image_url)
+                                        <div class="message-image">
+                                            <img src="{{ asset('storage/' . $message->image_url) }}" alt="添付画像">
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endif
                     @endforeach
                 @endif
             </div>
@@ -81,32 +104,68 @@
             <div class="message-form-container">
                 <form method="POST" action="{{ route('messages.store', $transaction->id) }}" enctype="multipart/form-data" class="message-form">
                     @csrf
-                    <div class="form-group">
-                        <textarea 
-                            name="content" 
-                            class="message-input" 
-                            placeholder="取引メッセージを記入してください"
-                            maxlength="400"
-                            id="message-content"
-                        >{{ old('content') }}</textarea>
-                        @error('content')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="form-actions">
-                        <label for="image" class="image-label">
-                            <span class="image-btn">画像を追加</span>
-                            <input type="file" name="image" id="image" accept=".jpeg,.jpg,.png" style="display: none;">
-                        </label>
-                        <button type="submit" class="send-btn">
-                            <i class="send-icon">📤</i>
-                        </button>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <textarea 
+                                name="content" 
+                                class="message-input" 
+                                placeholder="取引メッセージを記入してください"
+                                id="message-content"
+                            >{{ old('content') }}</textarea>
+                            <div class="character-count">0/400</div>
+                            @error('content')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        
+                        <div class="form-actions">
+                            <label for="image" class="image-label">
+                                <span class="image-btn">画像を追加</span>
+                                <input type="file" name="image" id="image" accept=".jpeg,.jpg,.png" class="hidden-file-input">
+                            </label>
+                            <button type="submit" class="send-btn">
+                                <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     @error('image')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- 評価モーダル --}}
+<div id="rating-modal" class="rating-modal">
+    <div class="rating-modal-content">
+        <div class="rating-modal-header">
+            <h3>取引が完了しました。</h3>
+        </div>
+        <div class="rating-modal-body">
+            <p>今回の取引相手はどうでしたか?</p>
+            <form id="rating-form" method="POST" action="{{ route('ratings.store', $transaction->id) }}">
+                @csrf
+                <div class="rating-stars">
+                    <input type="radio" name="rating" value="5" id="star5">
+                    <label for="star5">★</label>
+                    <input type="radio" name="rating" value="4" id="star4">
+                    <label for="star4">★</label>
+                    <input type="radio" name="rating" value="3" id="star3">
+                    <label for="star3">★</label>
+                    <input type="radio" name="rating" value="2" id="star2">
+                    <label for="star2">★</label>
+                    <input type="radio" name="rating" value="1" id="star1">
+                    <label for="star1">★</label>
+                </div>
+            </form>
+        </div>
+        <div class="rating-modal-footer">
+            <div class="rating-actions">
+                <button type="submit" form="rating-form" class="submit-btn">送信する</button>
             </div>
         </div>
     </div>
@@ -123,13 +182,30 @@ document.getElementById('image').addEventListener('change', function(e) {
         reader.onload = function(e) {
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.style.maxWidth = '200px';
-            img.style.maxHeight = '200px';
+            img.className = 'image-preview-img';
             preview.appendChild(img);
         }
         reader.readAsDataURL(e.target.files[0]);
     }
 });
+
+// 評価モーダル表示
+function showRatingModal() {
+    document.getElementById('rating-modal').style.display = 'block';
+}
+
+// 評価モーダル非表示
+function closeRatingModal() {
+    document.getElementById('rating-modal').style.display = 'none';
+}
+
+// モーダル外クリックで閉じる
+window.onclick = function(event) {
+    const modal = document.getElementById('rating-modal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
 
 // メッセージ編集機能
 function editMessage(messageId) {
@@ -225,22 +301,51 @@ function cancelEdit(messageId) {
     editForm.remove();
 }
 
-// 入力情報保持機能（セッションストレージ使用）
+// ユーザーIDと取引IDを取得
+const userId = {{ auth()->id() }};
+const transactionId = {{ $transaction->id }};
+const storageKey = `messageContent_${userId}_${transactionId}`;
+
+// 文字数カウンター機能
 document.getElementById('message-content').addEventListener('input', function(e) {
-    sessionStorage.setItem('messageContent', e.target.value);
+    const text = e.target.value;
+    const charCount = text.length;
+    const charCountElement = document.querySelector('.character-count');
+    
+    charCountElement.textContent = `${charCount}/400`;
+    
+    if (charCount > 400) {
+        charCountElement.classList.add('over-limit');
+    } else {
+        charCountElement.classList.remove('over-limit');
+    }
+    
+    // 入力情報保持機能（ユーザー・取引別に保存）
+    sessionStorage.setItem(storageKey, text);
 });
 
 // ページ読み込み時に保存された内容を復元
 window.addEventListener('load', function() {
-    const savedContent = sessionStorage.getItem('messageContent');
+    const savedContent = sessionStorage.getItem(storageKey);
     if (savedContent) {
         document.getElementById('message-content').value = savedContent;
+        // 文字数カウンターも更新
+        const charCount = savedContent.length;
+        const charCountElement = document.querySelector('.character-count');
+        charCountElement.textContent = `${charCount}/400`;
+        if (charCount > 400) {
+            charCountElement.classList.add('over-limit');
+        }
     }
+    
+    @if($transaction->is_completed && !$transaction->isRatedByUser(auth()->id()))
+        showRatingModal();
+    @endif
 });
 
 // 送信成功時にセッションストレージをクリア
 document.querySelector('.message-form').addEventListener('submit', function() {
-    sessionStorage.removeItem('messageContent');
+    sessionStorage.removeItem(storageKey);
 });
 </script>
 @endsection

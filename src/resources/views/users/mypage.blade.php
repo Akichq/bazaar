@@ -84,13 +84,30 @@
                 });
                 
             $soldTransactions = \App\Models\Item::where('user_id', $user->id)
-                ->whereHas('purchases', function($query) {
-                    $query->where('is_completed', false);
+                ->whereHas('purchases', function($query) use ($user) {
+                    $query->where(function($q) use ($user) {
+                        $q->where('is_completed', false)
+                          ->orWhere(function($subQ) use ($user) {
+                              $subQ->where('is_completed', true)
+                                   ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                       $ratingQ->where('user_id', $user->id);
+                                   });
+                          });
+                    });
                 })
-                ->with(['purchases' => function($query) {
-                    $query->with(['user', 'messages' => function($subQuery) {
+                ->with(['purchases' => function($query) use ($user) {
+                    $query->where(function($q) use ($user) {
+                        $q->where('is_completed', false)
+                          ->orWhere(function($subQ) use ($user) {
+                              $subQ->where('is_completed', true)
+                                   ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                       $ratingQ->where('user_id', $user->id);
+                                   });
+                          });
+                    })
+                    ->with(['user', 'messages' => function($subQuery) {
                         $subQuery->orderBy('created_at', 'desc');
-                    }]);
+                    }, 'ratings']);
                 }])
                 ->get()
                 ->map(function($item) {
@@ -101,7 +118,12 @@
                 });
         @endphp
         
-        @if($purchasedTransactions->isEmpty() && $soldTransactions->isEmpty())
+        @php
+            $hasPurchasedTransactions = $purchasedTransactions->isNotEmpty();
+            $hasSoldTransactions = $soldTransactions->flatMap->purchases->isNotEmpty();
+        @endphp
+        
+        @if(!$hasPurchasedTransactions && !$hasSoldTransactions)
             <div>取引中の商品はありません。</div>
         @else
             {{-- 購入した商品の取引 --}}
@@ -127,24 +149,25 @@
             {{-- 出品した商品の取引 --}}
             @foreach($soldTransactions as $item)
                 @foreach($item->purchases as $transaction)
-                    @if(!$transaction->is_completed)
-                        <a href="{{ route('transactions.show', $transaction->id) }}" class="mypage-item-link">
-                            <div class="mypage-item-card">
-                                @php
-                                    $unreadCount = $transaction->getUnreadMessageCount();
-                                @endphp
-                                @if($unreadCount > 0)
-                                    <div class="notification-badge">{{ $unreadCount }}</div>
-                                @endif
-                                @if($item->image_url)
-                                    <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" class="mypage-item-image">
-                                @else
-                                    <div class="mypage-item-image-placeholder">商品画像</div>
-                                @endif
-                                <div class="mypage-item-name">{{ $item->name }}</div>
-                            </div>
-                        </a>
-                    @endif
+                    <a href="{{ route('transactions.show', $transaction->id) }}" class="mypage-item-link">
+                        <div class="mypage-item-card">
+                            @php
+                                $unreadCount = $transaction->getUnreadMessageCount();
+                            @endphp
+                            @if($unreadCount > 0)
+                                <div class="notification-badge">{{ $unreadCount }}</div>
+                            @endif
+                            @if($item->image_url)
+                                <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" class="mypage-item-image">
+                            @else
+                                <div class="mypage-item-image-placeholder">商品画像</div>
+                            @endif
+                            <div class="mypage-item-name">{{ $item->name }}</div>
+                            @if($transaction->is_completed)
+                                <div class="completed-badge">完了</div>
+                            @endif
+                        </div>
+                    </a>
                 @endforeach
             @endforeach
         @endif
