@@ -35,3 +35,4 @@ class TransactionCompleted extends Mailable
                     ->view('emails.transaction-completed');
     }
 }
+

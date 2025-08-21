@@ -110,17 +110,26 @@
                     }, 'ratings']);
                 }])
                 ->get()
-                ->map(function($item) {
-                    $item->purchases = $item->purchases->sortByDesc(function($transaction) {
+                ->flatMap(function($item) {
+                    // 各商品の取引を新着メッセージ順にソート
+                    $sortedPurchases = $item->purchases->sortByDesc(function($transaction) {
                         return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
                     });
-                    return $item;
+                    
+                    // 各取引に商品情報を追加
+                    return $sortedPurchases->map(function($purchase) use ($item) {
+                        $purchase->item = $item;
+                        return $purchase;
+                    });
+                })
+                ->sortByDesc(function($transaction) {
+                    return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
                 });
         @endphp
         
         @php
             $hasPurchasedTransactions = $purchasedTransactions->isNotEmpty();
-            $hasSoldTransactions = $soldTransactions->flatMap->purchases->isNotEmpty();
+            $hasSoldTransactions = $soldTransactions->isNotEmpty();
         @endphp
         
         @if(!$hasPurchasedTransactions && !$hasSoldTransactions)
@@ -147,28 +156,26 @@
             @endforeach
             
             {{-- 出品した商品の取引 --}}
-            @foreach($soldTransactions as $item)
-                @foreach($item->purchases as $transaction)
-                    <a href="{{ route('transactions.show', $transaction->id) }}" class="mypage-item-link">
-                        <div class="mypage-item-card">
-                            @php
-                                $unreadCount = $transaction->getUnreadMessageCount();
-                            @endphp
-                            @if($unreadCount > 0)
-                                <div class="notification-badge">{{ $unreadCount }}</div>
-                            @endif
-                            @if($item->image_url)
-                                <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" class="mypage-item-image">
-                            @else
-                                <div class="mypage-item-image-placeholder">商品画像</div>
-                            @endif
-                            <div class="mypage-item-name">{{ $item->name }}</div>
-                            @if($transaction->is_completed)
-                                <div class="completed-badge">完了</div>
-                            @endif
-                        </div>
-                    </a>
-                @endforeach
+            @foreach($soldTransactions as $transaction)
+                <a href="{{ route('transactions.show', $transaction->id) }}" class="mypage-item-link">
+                    <div class="mypage-item-card">
+                        @php
+                            $unreadCount = $transaction->getUnreadMessageCount();
+                        @endphp
+                        @if($unreadCount > 0)
+                            <div class="notification-badge">{{ $unreadCount }}</div>
+                        @endif
+                        @if($transaction->item->image_url)
+                            <img src="{{ asset('storage/' . $transaction->item->image_url) }}" alt="商品画像" class="mypage-item-image">
+                        @else
+                            <div class="mypage-item-image-placeholder">商品画像</div>
+                        @endif
+                        <div class="mypage-item-name">{{ $transaction->item->name }}</div>
+                        @if($transaction->is_completed)
+                            <div class="completed-badge">完了</div>
+                        @endif
+                    </div>
+                </a>
             @endforeach
         @endif
     </div>

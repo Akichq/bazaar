@@ -37,3 +37,4 @@ class TransactionCompleted
         return new PrivateChannel('channel-name');
     }
 }
+

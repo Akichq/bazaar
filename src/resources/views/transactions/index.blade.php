@@ -8,7 +8,7 @@
     
     @php
         $hasPurchasedTransactions = $purchasedTransactions->isNotEmpty();
-        $hasSoldTransactions = $soldTransactions->flatMap->purchases->isNotEmpty();
+        $hasSoldTransactions = $soldTransactions->isNotEmpty();
     @endphp
     
     @if(!$hasPurchasedTransactions && !$hasSoldTransactions)
@@ -43,35 +43,33 @@
             @endforeach
             
             {{-- 出品した商品の取引 --}}
-            @foreach($soldTransactions as $item)
-                @foreach($item->purchases as $transaction)
-                    <div class="transaction-item-card">
-                        @php
-                            $unreadCount = $transaction->getUnreadMessageCount();
-                        @endphp
-                        @if($unreadCount > 0)
-                            <div class="notification-badge">{{ $unreadCount }}</div>
-                        @endif
-                        @if($transaction->is_completed)
-                            <div class="completed-badge">完了</div>
-                        @endif
-                        
-                        <a href="{{ route('transactions.show', $transaction->id) }}" class="transaction-link">
-                            <div class="transaction-image-wrap">
-                                @if($item->image_url)
-                                    <img src="{{ asset('storage/' . $item->image_url) }}" alt="商品画像" class="transaction-image">
-                                @else
-                                    <div class="transaction-image-placeholder">商品画像</div>
-                                @endif
-                            </div>
-                            <div class="transaction-info">
-                                <div class="transaction-item-name">{{ $item->name }}</div>
-                                <div class="transaction-price">¥{{ number_format($item->price) }}</div>
-                                <div class="transaction-status">出品した商品</div>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
+            @foreach($soldTransactions as $transaction)
+                <div class="transaction-item-card">
+                    @php
+                        $unreadCount = $transaction->getUnreadMessageCount();
+                    @endphp
+                    @if($unreadCount > 0)
+                        <div class="notification-badge">{{ $unreadCount }}</div>
+                    @endif
+                    @if($transaction->is_completed)
+                        <div class="completed-badge">完了</div>
+                    @endif
+                    
+                    <a href="{{ route('transactions.show', $transaction->id) }}" class="transaction-link">
+                        <div class="transaction-image-wrap">
+                            @if($transaction->item->image_url)
+                                <img src="{{ asset('storage/' . $transaction->item->image_url) }}" alt="商品画像" class="transaction-image">
+                            @else
+                                <div class="transaction-image-placeholder">商品画像</div>
+                            @endif
+                        </div>
+                        <div class="transaction-info">
+                            <div class="transaction-item-name">{{ $transaction->item->name }}</div>
+                            <div class="transaction-price">¥{{ number_format($transaction->item->price) }}</div>
+                            <div class="transaction-status">出品した商品</div>
+                        </div>
+                    </a>
+                </div>
             @endforeach
         </div>
     @endif

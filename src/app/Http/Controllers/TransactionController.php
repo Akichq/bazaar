@@ -54,11 +54,20 @@ class TransactionController extends Controller
                 }, 'ratings']);
             }])
             ->get()
-            ->map(function($item) {
-                $item->purchases = $item->purchases->sortByDesc(function($transaction) {
+            ->flatMap(function($item) {
+                // 各商品の取引を新着メッセージ順にソート
+                $sortedPurchases = $item->purchases->sortByDesc(function($transaction) {
                     return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
                 });
-                return $item;
+                
+                // 各取引に商品情報を追加
+                return $sortedPurchases->map(function($purchase) use ($item) {
+                    $purchase->item = $item;
+                    return $purchase;
+                });
+            })
+            ->sortByDesc(function($transaction) {
+                return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
             });
             
         // 全体の新着メッセージ数を計算

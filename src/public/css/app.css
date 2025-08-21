@@ -31,7 +31,8 @@ body {
     display: flex;
     gap: 16px;
 }
-.header-link, .header-btn {
+.header-link,
+.header-btn {
     color: #fff;
     text-decoration: none;
     /* margin-left: 16px; /* gapで指定しているので不要な場合あり */
@@ -63,6 +64,7 @@ body {
     gap: 32px;
     margin: 32px 0;
 }
+
 .item-card {
     background: #eee;
     border-radius: 8px;
@@ -94,4 +96,4 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-} 
+}

@@ -21,20 +21,13 @@ class Message extends Model
         'is_read' => 'boolean',
     ];
 
-    /**
-     * 取引とのリレーション
-     */
-    public function transaction()
-    {
-        return $this->belongsTo(Purchase::class, 'transaction_id');
-    }
-
-    /**
-     * ユーザーとのリレーション
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-}
 
+    public function transaction()
+    {
+        return $this->belongsTo(Purchase::class, 'transaction_id');
+    }
+}

@@ -69,3 +69,4 @@ docker-compose exec php php artisan mail:test-mailtrap {transaction_id}
 -   Mailtrap は開発・テスト環境専用です
 -   本番環境では実際のメールサービス（SendGrid、Mailgun 等）を使用してください
 -   無料プランでは月間 500 通まで送信可能です
+

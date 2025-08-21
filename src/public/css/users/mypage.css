@@ -97,15 +97,6 @@
     .mypage-username {
         font-size: 22px;
     }
-
-    .star-filled,
-    .star-empty {
-        font-size: 16px;
-    }
-
-    .mypage-edit-btn {
-        margin-left: 0;
-    }
 }
 
 @media (max-width: 768px) {
