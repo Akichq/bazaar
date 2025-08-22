@@ -19,8 +19,8 @@
             <div class="sidebar-title">その他の取引</div>
             <div class="transaction-list">
                 @foreach($otherTransactions as $otherTransaction)
-                    <a href="{{ route('transactions.show', $otherTransaction->id) }}" 
-                       class="transaction-item {{ $otherTransaction->id === $transaction->id ? 'active' : '' }}">
+                    <a href="{{ route('transactions.show', $otherTransaction->id) }}"
+                        class="transaction-item {{ $otherTransaction->id === $transaction->id ? 'active' : '' }}">
                         {{ $otherTransaction->item->name }}
                     </a>
                 @endforeach
@@ -106,9 +106,9 @@
                     @csrf
                     <div class="form-row">
                         <div class="form-group">
-                            <textarea 
-                                name="content" 
-                                class="message-input" 
+                            <textarea
+                                name="content"
+                                class="message-input"
                                 placeholder="取引メッセージを記入してください"
                                 id="message-content"
                             >{{ old('content') }}</textarea>
@@ -176,7 +176,7 @@
 document.getElementById('image').addEventListener('change', function(e) {
     const preview = document.getElementById('image-preview');
     preview.innerHTML = '';
-    
+
     if (e.target.files && e.target.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -212,7 +212,7 @@ function editMessage(messageId) {
     const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
     const messageText = messageElement.querySelector('.message-text');
     const currentText = messageText.textContent;
-    
+
     // 編集フォームを作成
     const editForm = document.createElement('div');
     editForm.className = 'edit-form';
@@ -223,7 +223,7 @@ function editMessage(messageId) {
             <button class="cancel-btn" onclick="cancelEdit(${messageId})">キャンセル</button>
         </div>
     `;
-    
+
     // 元のテキストを隠して編集フォームを表示
     messageText.style.display = 'none';
     messageElement.querySelector('.message-actions').style.display = 'none';
@@ -237,7 +237,7 @@ function deleteMessage(messageId) {
         const formData = new FormData();
         formData.append('_method', 'DELETE');
         formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-        
+
         fetch(`/messages/${messageId}`, {
             method: 'POST',
             body: formData
@@ -263,13 +263,13 @@ function saveMessage(messageId) {
     const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
     const editInput = messageElement.querySelector('.edit-input');
     const newContent = editInput.value;
-    
+
     // FormDataを使用してフォームデータを作成
     const formData = new FormData();
     formData.append('content', newContent);
     formData.append('_method', 'PUT');
     formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-    
+
     fetch(`/messages/${messageId}`, {
         method: 'POST',
         body: formData
@@ -295,7 +295,7 @@ function cancelEdit(messageId) {
     const messageText = messageElement.querySelector('.message-text');
     const messageActions = messageElement.querySelector('.message-actions');
     const editForm = messageElement.querySelector('.edit-form');
-    
+
     messageText.style.display = 'block';
     messageActions.style.display = 'flex';
     editForm.remove();
@@ -311,15 +311,15 @@ document.getElementById('message-content').addEventListener('input', function(e)
     const text = e.target.value;
     const charCount = text.length;
     const charCountElement = document.querySelector('.character-count');
-    
+
     charCountElement.textContent = `${charCount}/400`;
-    
+
     if (charCount > 400) {
         charCountElement.classList.add('over-limit');
     } else {
         charCountElement.classList.remove('over-limit');
     }
-    
+
     // 入力情報保持機能（ユーザー・取引別に保存）
     sessionStorage.setItem(storageKey, text);
 });
@@ -337,7 +337,7 @@ window.addEventListener('load', function() {
             charCountElement.classList.add('over-limit');
         }
     }
-    
+
     @if($transaction->is_completed && !$transaction->isRatedByUser(auth()->id()))
         showRatingModal();
     @endif

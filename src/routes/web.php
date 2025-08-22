@@ -9,8 +9,6 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,17 +61,17 @@ Route::middleware(['auth'])->group(function () {
 
     // お気に入り関連
     Route::post('/item/{item}/favorite', [ItemController::class, 'favorite'])->name('items.favorite');
-    
+
     // 取引関連
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transaction/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
     Route::post('/transaction/{transaction}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
-    
+
     // メッセージ関連
     Route::post('/transaction/{transaction}/messages', [MessageController::class, 'store'])->name('messages.store');
     Route::put('/messages/{message}', [MessageController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
-    
+
     // 評価関連
     Route::post('/transaction/{transaction}/rating', [RatingController::class, 'store'])->name('ratings.store');
 });

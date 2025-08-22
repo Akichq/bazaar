@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\ProfileRequest;
 use App\Http\Requests\AddressRequest;
 
 class UserController extends Controller
@@ -13,14 +11,14 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         // 評価平均値を取得
         $ratingController = new \App\Http\Controllers\RatingController();
         $averageRating = $ratingController->getAverageRating($user->id);
-        
+
         // 取引通知数を計算
         $transactionNotificationCount = $this->calculateTransactionNotificationCount($user->id);
-        
+
         // 出品した商品
         $exhibited_items = \App\Models\Item::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
@@ -29,9 +27,9 @@ class UserController extends Controller
         $purchased_items = \App\Models\Item::whereHas('purchases', function($q) use ($user) {
             $q->where('user_id', $user->id);
         })->where('is_sold', true)
-          ->orderBy('created_at', 'desc')
-          ->get();
-          
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('users.mypage', compact('user', 'exhibited_items', 'purchased_items', 'averageRating', 'transactionNotificationCount'));
     }
 
@@ -48,7 +46,7 @@ class UserController extends Controller
             }])
             ->get()
             ->sum('messages_count');
-            
+
         // 出品した商品の新着メッセージ数（取引完了済みも含む）
         $soldCount = \App\Models\Item::where('user_id', $userId)
             ->whereHas('purchases', function($query) {
@@ -61,7 +59,7 @@ class UserController extends Controller
             ->flatMap->purchases
             ->flatMap->messages
             ->count();
-            
+
         return $purchasedCount + $soldCount;
     }
 
@@ -80,7 +78,7 @@ class UserController extends Controller
             ->sortByDesc(function($transaction) {
                 return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
             });
-            
+
         // 出品した商品の取引を取得 - 新規メッセージ順にソート
         $soldTransactions = \App\Models\Item::where('user_id', $userId)
             ->whereHas('purchases', function($query) {
@@ -97,7 +95,7 @@ class UserController extends Controller
                 $sortedPurchases = $item->purchases->sortByDesc(function($transaction) {
                     return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
                 });
-                
+
                 // 各取引に商品情報を追加
                 return $sortedPurchases->map(function($purchase) use ($item) {
                     $purchase->item = $item;
@@ -107,7 +105,7 @@ class UserController extends Controller
             ->sortByDesc(function($transaction) {
                 return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
             });
-            
+
         return compact('purchasedTransactions', 'soldTransactions');
     }
 
@@ -124,7 +122,7 @@ class UserController extends Controller
     /**
      * プロフィール情報を更新
      */
-    public function updateProfile(\App\Http\Requests\AddressRequest $request)
+    public function updateProfile(AddressRequest $request)
     {
         $user = \App\Models\User::find(Auth::id());
 
@@ -155,4 +153,4 @@ class UserController extends Controller
 
         return redirect()->route('users.mypage')->with('success', 'プロフィールを更新しました。');
     }
-} 
+}

@@ -31,23 +31,23 @@ class TransactionController extends Controller
             ->whereHas('purchases', function($query) use ($user) {
                 $query->where(function($q) use ($user) {
                     $q->where('is_completed', false)
-                      ->orWhere(function($subQ) use ($user) {
-                          $subQ->where('is_completed', true)
-                               ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
-                                   $ratingQ->where('user_id', $user->id);
-                               });
-                      });
+                        ->orWhere(function($subQ) use ($user) {
+                            $subQ->where('is_completed', true)
+                                ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                    $ratingQ->where('user_id', $user->id);
+                                });
+                        });
                 });
             })
             ->with(['purchases' => function($query) use ($user) {
                 $query->where(function($q) use ($user) {
                     $q->where('is_completed', false)
-                      ->orWhere(function($subQ) use ($user) {
-                          $subQ->where('is_completed', true)
-                               ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
-                                   $ratingQ->where('user_id', $user->id);
-                               });
-                      });
+                        ->orWhere(function($subQ) use ($user) {
+                            $subQ->where('is_completed', true)
+                                ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                    $ratingQ->where('user_id', $user->id);
+                                });
+                        });
                 })
                 ->with(['user', 'messages' => function($subQuery) {
                     $subQuery->orderBy('created_at', 'desc');
@@ -167,30 +167,30 @@ class TransactionController extends Controller
         $soldTransactions = Item::where('user_id', $userId)
             ->whereHas('purchases', function($query) use ($currentTransactionId, $userId) {
                 $query->where('id', '!=', $currentTransactionId)
-                      ->where(function($q) use ($userId) {
-                          $q->where('is_completed', false)
+                        ->where(function($q) use ($userId) {
+                            $q->where('is_completed', false)
                             ->orWhere(function($subQ) use ($userId) {
                                 $subQ->where('is_completed', true)
-                                     ->whereDoesntHave('ratings', function($ratingQ) use ($userId) {
-                                         $ratingQ->where('user_id', $userId);
-                                     });
+                                        ->whereDoesntHave('ratings', function($ratingQ) use ($userId) {
+                                            $ratingQ->where('user_id', $userId);
+                                        });
                             });
-                      });
+                        });
             })
             ->with(['purchases' => function($query) use ($currentTransactionId, $userId) {
                 $query->where('id', '!=', $currentTransactionId)
-                      ->where(function($q) use ($userId) {
-                          $q->where('is_completed', false)
+                        ->where(function($q) use ($userId) {
+                            $q->where('is_completed', false)
                             ->orWhere(function($subQ) use ($userId) {
                                 $subQ->where('is_completed', true)
-                                     ->whereDoesntHave('ratings', function($ratingQ) use ($userId) {
-                                         $ratingQ->where('user_id', $userId);
-                                     });
+                                        ->whereDoesntHave('ratings', function($ratingQ) use ($userId) {
+                                            $ratingQ->where('user_id', $userId);
+                                        });
                             });
-                      })
-                      ->with(['user', 'messages' => function($subQuery) {
-                          $subQuery->orderBy('created_at', 'desc');
-                      }, 'ratings']);
+                        })
+                        ->with(['user', 'messages' => function($subQuery) {
+                            $subQuery->orderBy('created_at', 'desc');
+                        }, 'ratings']);
             }])
             ->get()
             ->flatMap->purchases

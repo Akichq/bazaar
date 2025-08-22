@@ -499,11 +499,11 @@
 
 .rating-modal-body {
     text-align: center;
-    padding: 10px 0; /* 上下の間隔を詰める */
+    padding: 10px 0;
 }
 
 .rating-modal-body p {
-    margin-bottom: 8px; /* 星との間隔を詰める */
+    margin-bottom: 8px;
     color: #666;
     text-align: left;
     font-size: 14px;
@@ -511,10 +511,10 @@
 
 .rating-stars {
     display: flex;
-    flex-direction: row-reverse; /* 左から★1になるように視覚順を反転 */
+    flex-direction: row-reverse;
     justify-content: center;
     gap: 10px;
-    margin: 8px 0 10px; /* 上下余白を短縮 */
+    margin: 8px 0 10px;
 }
 
 .rating-stars input {

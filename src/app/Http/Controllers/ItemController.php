@@ -48,26 +48,26 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         $item->load('categories', 'condition', 'comments.user', 'favorites');
-        
+
         // いいね済みかどうかをチェック
         $isLiked = false;
         if (auth()->check()) {
             $isLiked = $item->favorites()->where('user_id', auth()->id())->exists();
         }
-        
+
         return view('items.show', compact('item', 'isLiked'));
     }
 
     public function favorite(Request $request, Item $item)
     {
         $user = auth()->user();
-        
+
         if (!$user) {
             return redirect()->route('login');
         }
-        
+
         $existing = $item->favorites()->where('user_id', $user->id)->first();
-        
+
         if ($existing) {
             // いいね解除
             $existing->delete();
@@ -77,7 +77,7 @@ class ItemController extends Controller
                 'user_id' => $user->id
             ]);
         }
-        
+
         return redirect()->route('items.show', $item->id);
     }
 
@@ -255,7 +255,7 @@ class ItemController extends Controller
         if (!auth()->check()) {
             return redirect()->route('login')->with('error', '商品を出品するにはログインが必要です。');
         }
-        
+
         $categories = Category::all();
         $conditions = Condition::all();
         return view('items.create', compact('categories', 'conditions'));
@@ -298,7 +298,7 @@ class ItemController extends Controller
     {
         $path = storage_path('app/public/' . $image);
         $info = getimagesize($path);
-        
+
         // 画像の最適化
         if ($info['mime'] === 'image/jpeg') {
             $image = imagecreatefromjpeg($path);
@@ -319,15 +319,15 @@ class ItemController extends Controller
 
             $newImage = imagecreatetruecolor($newWidth, $newHeight);
             imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-            
+
             // WebP形式で保存
             $webpPath = str_replace(['.jpg', '.jpeg', '.png'], '.webp', $path);
             imagewebp($newImage, $webpPath, 80);
-            
+
             // 2xサイズの画像も生成
             $newImage2x = imagecreatetruecolor($newWidth * 2, $newHeight * 2);
             imagecopyresampled($newImage2x, $image, 0, 0, 0, 0, $newWidth * 2, $newHeight * 2, $width, $height);
-            
+
             $webpPath2x = str_replace('.webp', '@2x.webp', $webpPath);
             imagewebp($newImage2x, $webpPath2x, 80);
 

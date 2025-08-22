@@ -82,28 +82,28 @@
                 ->sortByDesc(function($transaction) {
                     return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
                 });
-                
+
             $soldTransactions = \App\Models\Item::where('user_id', $user->id)
                 ->whereHas('purchases', function($query) use ($user) {
                     $query->where(function($q) use ($user) {
                         $q->where('is_completed', false)
-                          ->orWhere(function($subQ) use ($user) {
-                              $subQ->where('is_completed', true)
-                                   ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
-                                       $ratingQ->where('user_id', $user->id);
-                                   });
-                          });
+                            ->orWhere(function($subQ) use ($user) {
+                                $subQ->where('is_completed', true)
+                                    ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                        $ratingQ->where('user_id', $user->id);
+                                    });
+                            });
                     });
                 })
                 ->with(['purchases' => function($query) use ($user) {
                     $query->where(function($q) use ($user) {
                         $q->where('is_completed', false)
-                          ->orWhere(function($subQ) use ($user) {
-                              $subQ->where('is_completed', true)
-                                   ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
-                                       $ratingQ->where('user_id', $user->id);
-                                   });
-                          });
+                            ->orWhere(function($subQ) use ($user) {
+                                $subQ->where('is_completed', true)
+                                    ->whereDoesntHave('ratings', function($ratingQ) use ($user) {
+                                        $ratingQ->where('user_id', $user->id);
+                                    });
+                            });
                     })
                     ->with(['user', 'messages' => function($subQuery) {
                         $subQuery->orderBy('created_at', 'desc');
@@ -115,7 +115,7 @@
                     $sortedPurchases = $item->purchases->sortByDesc(function($transaction) {
                         return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
                     });
-                    
+
                     // 各取引に商品情報を追加
                     return $sortedPurchases->map(function($purchase) use ($item) {
                         $purchase->item = $item;
@@ -126,12 +126,12 @@
                     return $transaction->messages->first() ? $transaction->messages->first()->created_at : $transaction->created_at;
                 });
         @endphp
-        
+
         @php
             $hasPurchasedTransactions = $purchasedTransactions->isNotEmpty();
             $hasSoldTransactions = $soldTransactions->isNotEmpty();
         @endphp
-        
+
         @if(!$hasPurchasedTransactions && !$hasSoldTransactions)
             <div>取引中の商品はありません。</div>
         @else
@@ -154,7 +154,7 @@
                     </div>
                 </a>
             @endforeach
-            
+
             {{-- 出品した商品の取引 --}}
             @foreach($soldTransactions as $transaction)
                 <a href="{{ route('transactions.show', $transaction->id) }}" class="mypage-item-link">
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         purchaseList.style.display = 'none';
         if (transactionList) transactionList.style.display = 'none';
     });
-    
+
     tabPurchase.addEventListener('click', function() {
         tabPurchase.classList.add('active');
         tabPurchase.style.color = '#ff6f6f';
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function() {
         purchaseList.style.display = 'flex';
         if (transactionList) transactionList.style.display = 'none';
     });
-    
+
     tabTransaction.addEventListener('click', function() {
         tabTransaction.classList.add('active');
         tabTransaction.style.color = '#ff6f6f';
@@ -236,4 +236,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection 
+@endsection

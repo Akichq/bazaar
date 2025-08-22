@@ -4,7 +4,7 @@
 
 1. [Mailtrap.io](https://mailtrap.io) にアクセス
 2. 無料アカウントを作成
-3. ログイン後、新しい Inbox を作成
+3. ログイン後、新しい Sandbox を作成
 
 ## 2. 環境変数の設定
 
@@ -26,10 +26,7 @@ MAILTRAP_PASSWORD=your_mailtrap_password
 
 ## 3. Mailtrap 認証情報の取得
 
-1. Mailtrap ダッシュボードで Inbox を選択
-2. 「Show Credentials」をクリック
-3. 「SMTP Settings」タブを選択
-4. 以下の情報をコピー：
+1. 以下の情報をコピー：
     - Username
     - Password
     - Host (通常は smtp.mailtrap.io)
@@ -69,4 +66,5 @@ docker-compose exec php php artisan mail:test-mailtrap {transaction_id}
 -   Mailtrap は開発・テスト環境専用です
 -   本番環境では実際のメールサービス（SendGrid、Mailgun 等）を使用してください
 -   無料プランでは月間 500 通まで送信可能です
+
 

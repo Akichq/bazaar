@@ -55,3 +55,4 @@ class TestMailtrap extends Command
     }
 }
 
+

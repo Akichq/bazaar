@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Message;
 use App\Models\Purchase;
 use App\Http\Requests\MessageRequest;
@@ -58,7 +58,7 @@ class MessageController extends Controller
         if ($request->hasFile('image')) {
             // 古い画像を削除
             if ($message->image_url) {
-                \Storage::disk('public')->delete($message->image_url);
+                Storage::disk('public')->delete($message->image_url);
             }
             $imagePath = $request->file('image')->store('messages', 'public');
             $data['image_url'] = $imagePath;
@@ -83,7 +83,7 @@ class MessageController extends Controller
         
         // 画像を削除
         if ($message->image_url) {
-            \Storage::disk('public')->delete($message->image_url);
+            Storage::disk('public')->delete($message->image_url);
         }
         
         $transactionId = $message->transaction_id;
