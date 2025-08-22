@@ -3,6 +3,9 @@
 /public/storage
 /storage/*.key
 /storage/app/public/items/*.key
+!/storage/app/public/items/*.jpg
+!/storage/app/public/items/*.png
+!/storage/app/public/items/*.jpeg
 /vendor
 .env
 .env.backup
